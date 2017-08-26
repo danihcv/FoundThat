@@ -33,6 +33,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import pt.foundthat.controller.FoundThat;
+import pt.foundthat.model.ModelStrategy;
 import pt.foundthat.model.Registo;
 import pt.foundthat.model.Sala;
 import pt.foundthat.model.TipoObjeto;
@@ -74,10 +75,10 @@ public class FrmListagensIS extends JFrame {
 	 */
 	@SuppressWarnings("unchecked")
 	public FrmListagensIS() throws Exception {
-		//OPCOES MESSAGEBOX(SIM/NÃO)
+		//OPCOES MESSAGEBOX(SIM/Nï¿½O)
 		String[] opcoes = new String[2];
 		opcoes[0] = new String("Sim");
-		opcoes[1] = new String("Não");
+		opcoes[1] = new String("Nï¿½o");
 
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FrmListagensIS.class.getResource("/pt/foundthat/resources/lupa.png")));
@@ -87,7 +88,7 @@ public class FrmListagensIS extends JFrame {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicação?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
+				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicaï¿½ï¿½o?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 				if (selectedOption == JOptionPane.YES_OPTION) {
 					try {
 						FoundThat.gravarFicheiro();
@@ -132,7 +133,7 @@ public class FrmListagensIS extends JFrame {
 		cmbSala.setForeground(new Color(25, 25, 112));
 		cmbSala.setBackground(new Color(220, 220, 220));
 
-		for (Sala s : FoundThat.salas) {
+		for (ModelStrategy s : FoundThat.salas) {
 			cmbSala.addItem(s);
 		}
 
@@ -160,7 +161,7 @@ public class FrmListagensIS extends JFrame {
 
 		cmbEstado.addItem("Bom");
 		cmbEstado.addItem("Mau");
-		cmbEstado.addItem("Razoável");
+		cmbEstado.addItem("Razoï¿½vel");
 
 		cmbEstado.setBounds(332, 29, 102, 20);
 		contentPane.add(cmbEstado);
@@ -189,11 +190,11 @@ public class FrmListagensIS extends JFrame {
 		//JTABLE
 		dtm.setRowCount(0);
 		dtm.setColumnCount(0);
-		String[] nomeColunas = {"Código", "Objeto", "Cor", "Estado", "Sala"};
+		String[] nomeColunas = {"Cï¿½digo", "Objeto", "Cor", "Estado", "Sala"};
 		@SuppressWarnings("unused")
 		int cont = 0;
 		String[][] regs = null;
-		//CÓPIA DO ARRAY ORIGINAL DE REGISTOS DAS DOACOES, PARA ORDENÁ-LO NA JTABLE POR TIPO DE OBJETO!
+		//Cï¿½PIA DO ARRAY ORIGINAL DE REGISTOS DAS DOACOES, PARA ORDENï¿½-LO NA JTABLE POR TIPO DE OBJETO!
 		ArrayList <Registo> registoDoacoesOrdenado = new ArrayList<Registo>(FoundThat.registoDoacoes);
 		Collections.sort(registoDoacoesOrdenado);
 		regs = new String[registoDoacoesOrdenado.size()][5];
@@ -257,14 +258,14 @@ public class FrmListagensIS extends JFrame {
 				Date dataFinal = null;
 				int cont = 0;
 				if (txtInicial.getText().equals("") || (txtFinal.getText().equals(""))) {
-					JOptionPane.showMessageDialog(getParent(), "Insira as datas no formato dia-mês-ano!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+					JOptionPane.showMessageDialog(getParent(), "Insira as datas no formato dia-mï¿½s-ano!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 					txtInicial.setText("");
 					txtFinal.setText("");
 					refresh();
 				} else
 					try {
 						if ( FoundThat.formatoDataRegisto.parse(txtInicial.getText()).after(FoundThat.formatoDataRegisto.parse(txtFinal.getText()))                          ) {
-							JOptionPane.showMessageDialog(getParent(), "A data final tem de ser superior à data inicial!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+							JOptionPane.showMessageDialog(getParent(), "A data final tem de ser superior ï¿½ data inicial!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 							refresh();
 						}
 						else {
@@ -275,7 +276,7 @@ public class FrmListagensIS extends JFrame {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-							//CÓPIA DO ARRAY ORIGINAL DE REGISTOS, PARA ORDENÁ-LO NA JTABLE POR TIPO DE OBJETO!
+							//Cï¿½PIA DO ARRAY ORIGINAL DE REGISTOS, PARA ORDENï¿½-LO NA JTABLE POR TIPO DE OBJETO!
 							ArrayList <Registo> registoDoacoesOrdenado = new ArrayList<Registo>(FoundThat.registoDoacoes);
 							Collections.sort(registoDoacoesOrdenado);
 							for (int i = 0; i < registoDoacoesOrdenado.size(); i++) {
@@ -287,7 +288,7 @@ public class FrmListagensIS extends JFrame {
 							dtm.setColumnCount(0);
 
 							String[][] regs = new String[cont][5];
-							String[] nomeColunas = {"Código", "Objeto", "Cor", "Estado", "Sala"};
+							String[] nomeColunas = {"Cï¿½digo", "Objeto", "Cor", "Estado", "Sala"};
 
 							int c = 0;
 							for (int i = 0; i < registoDoacoesOrdenado.size(); i++) {
@@ -358,7 +359,7 @@ public class FrmListagensIS extends JFrame {
 		btnSair.setBounds(273, 226, 106, 23);
 		contentPane.add(btnSair);
 
-		//BOTÃO LIMPAR
+		//BOTï¿½O LIMPAR
 		JButton btnLimpar = new JButton("Limpar");
 		btnLimpar.addMouseListener(new MouseAdapter() {
 			@Override
@@ -389,7 +390,7 @@ public class FrmListagensIS extends JFrame {
 		btnLimpar.setBounds(174, 227, 89, 23);
 		contentPane.add(btnLimpar);
 		
-		//BOTÃO +INFO
+		//BOTï¿½O +INFO
 		JButton btnInfo = new JButton("+Info");
 		btnInfo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -403,7 +404,7 @@ public class FrmListagensIS extends JFrame {
 							"\n" + "Hora: " + FoundThat.registoDoacoes.get(cod).getHora() + "\n" + "Tipo de objeto: " + FoundThat.registoDoacoes.get(cod).getObjeto().getNome().substring(0, 1).toUpperCase() + 
 							FoundThat.registoDoacoes.get(cod).getObjeto().getNome().substring(1).toLowerCase() + "\n" + "Cor: " + FoundThat.registoDoacoes.get(cod).getCor().substring(0, 1).toUpperCase() +  
 							FoundThat.registoDoacoes.get(cod).getCor().substring(1).toLowerCase() + "\n" + "Estado: " + FoundThat.registoDoacoes.get(cod).getEstado().substring(0, 1).toUpperCase() + 
-							FoundThat.registoDoacoes.get(cod).getEstado().substring(1).toLowerCase() + "\n" + "Descrição: " + FoundThat.registoDoacoes.get(cod).getDescricao() ;
+							FoundThat.registoDoacoes.get(cod).getEstado().substring(1).toLowerCase() + "\n" + "Descriï¿½ï¿½o: " + FoundThat.registoDoacoes.get(cod).getDescricao() ;
 					JOptionPane.showMessageDialog(null, info, "FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 			}
@@ -443,10 +444,10 @@ public class FrmListagensIS extends JFrame {
 	public static void refresh() {
 		dtm.setRowCount(0);
 		dtm.setColumnCount(0);
-		String[] nomeColunas = {"Código", "Objeto", "Cor", "Estado", "Sala"};
+		String[] nomeColunas = {"Cï¿½digo", "Objeto", "Cor", "Estado", "Sala"};
 		@SuppressWarnings("unused")
 		int cont = 0;
-		//CÓPIA DO ARRAY ORIGINAL DE REGISTOS, PARA ORDENÁ-LO NA JTABLE POR TIPO DE OBJETO!
+		//Cï¿½PIA DO ARRAY ORIGINAL DE REGISTOS, PARA ORDENï¿½-LO NA JTABLE POR TIPO DE OBJETO!
 		ArrayList <Registo> registoDoacoesOrdenado = new ArrayList<Registo>(FoundThat.registoDoacoes);
 		Collections.sort(registoDoacoesOrdenado);
 		String[][] regs = new String[registoDoacoesOrdenado.size()][5];

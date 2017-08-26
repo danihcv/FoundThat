@@ -2,7 +2,7 @@ package pt.foundthat.model;
 
 
 
-public class User implements Comparable <User>{
+public class User  implements Comparable <User>{
 
 	private String user;
 	private String password;

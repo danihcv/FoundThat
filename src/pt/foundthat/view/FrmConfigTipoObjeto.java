@@ -29,8 +29,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import pt.foundthat.controller.FoundThat;
+import pt.foundthat.controller.ManagerIS;
 import pt.foundthat.controller.ManagerTipoObjeto;
 import pt.foundthat.model.Instituicao;
+import pt.foundthat.model.ModelStrategy;
 import pt.foundthat.model.TipoObjeto;
 
 public class FrmConfigTipoObjeto extends JFrame {
@@ -65,11 +67,12 @@ public class FrmConfigTipoObjeto extends JFrame {
 	 */
 	@SuppressWarnings("rawtypes")
 	public FrmConfigTipoObjeto() {
+	    FoundThat.managerEntity = new ManagerTipoObjeto();
 		setResizable(false);
-		//OPCOES MESSAGEBOX(SIM/NÃO)
+		//OPCOES MESSAGEBOX(SIM/Nï¿½O)
 		String[] opcoes = new String[2];
 		opcoes[0] = new String("Sim");
-		opcoes[1] = new String("Não");
+		opcoes[1] = new String("Nï¿½o");
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FrmConfigTipoObjeto.class.getResource("/pt/foundthat/resources/lupa.png")));
 		setTitle("Gest\u00E3o de tipos de objetos - FoundThat");
@@ -78,7 +81,7 @@ public class FrmConfigTipoObjeto extends JFrame {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicação?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
+				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicaï¿½ï¿½o?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 				if (selectedOption == JOptionPane.YES_OPTION) {
 					try {
 						FoundThat.gravarFicheiro();
@@ -142,7 +145,7 @@ public class FrmConfigTipoObjeto extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				txtObjeto.setText(list.getSelectedValue().toString().substring(0, 1).toUpperCase() + list.getSelectedValue().toString().substring(1).toLowerCase());
-				//ASSOCIAR TIPOOBJETO (LIST) À INSTITUICAO (COMBOBOX) ANTERIORMENTE ASSOCIADA
+				//ASSOCIAR TIPOOBJETO (LIST) ï¿½ INSTITUICAO (COMBOBOX) ANTERIORMENTE ASSOCIADA
 				for (TipoObjeto to : FoundThat.tipoObjetos) {
 					if (to.getNome().equals(list.getSelectedValue().toString().toLowerCase())) {
 						dlmIS.setSelectedItem(to.getCodigoIS().getNome().substring(0, 1).toUpperCase() + to.getCodigoIS().getNome().substring(1).toLowerCase());
@@ -179,8 +182,16 @@ public class FrmConfigTipoObjeto extends JFrame {
 					JOptionPane.showMessageDialog(null, "Introduza um objeto!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else {
-					if (ManagerTipoObjeto.adicionarTipoObjeto(txtObjeto.getText().toLowerCase(), cmbInstituicao.getSelectedItem().toString().toLowerCase()) == false) {
-						JOptionPane.showMessageDialog(null, "O objeto " + txtObjeto.getText().substring(0, 1).toUpperCase()+txtObjeto.getText().substring(1).toLowerCase() + " já existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+                    ModelStrategy is = null;
+                    String isNome = cmbInstituicao.getSelectedItem().toString().toLowerCase();
+                    for(ModelStrategy i : FoundThat.instituicoes) {
+                        if (i.getNome().equals(isNome)) {
+                            is = i;
+                        }
+                    }
+                    TipoObjeto to = new TipoObjeto(-1, txtObjeto.getText().toLowerCase(), (Instituicao) is);
+					if (!FoundThat.managerEntity.adicionarEntity(to)) {
+						JOptionPane.showMessageDialog(null, "O objeto " + txtObjeto.getText().substring(0, 1).toUpperCase()+txtObjeto.getText().substring(1).toLowerCase() + " jï¿½ existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 					}
 					else {
 						refreshTO();
@@ -217,18 +228,27 @@ public class FrmConfigTipoObjeto extends JFrame {
 					else {
 						int selectedOption = JOptionPane.showOptionDialog(null, "Deseja alterar o objeto " + list.getSelectedValue().toString().substring(0, 1).toUpperCase() + list.getSelectedValue().toString().substring(1).toLowerCase() + " pelo objeto " + txtObjeto.getText().substring(0, 1).toUpperCase()+txtObjeto.getText().substring(1).toLowerCase() + "?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 						if (selectedOption == JOptionPane.YES_OPTION) {
-							String antigaIS = null;
+							ModelStrategy isAntiga = null;
 							for (TipoObjeto to : FoundThat.tipoObjetos) {
 								if (list.getSelectedValue().toString().toLowerCase().equals(to.getNome())) {
-									antigaIS = to.getCodigoIS().getNome();
+                                    isAntiga = to.getCodigoIS();
 								}
 							}
-							if (ManagerTipoObjeto.alterarTipoObjeto(txtObjeto.getText().toLowerCase(), list.getSelectedValue().toString().toLowerCase(), cmbInstituicao.getSelectedItem().toString().toLowerCase(), antigaIS) == true) {
+							ModelStrategy isNova = null;
+							for (ModelStrategy i : FoundThat.instituicoes) {
+							    if (cmbInstituicao.getSelectedItem().toString().toLowerCase().equals(i.getNome())) {
+							        isNova = i;
+                                }
+                            }
+
+							ModelStrategy toNovo = new TipoObjeto(-1, txtObjeto.getText().toLowerCase(), (Instituicao) isNova);
+							ModelStrategy toAntigo = new TipoObjeto(-1, list.getSelectedValue().toString().toLowerCase(), (Instituicao) isAntiga);
+							if (FoundThat.managerEntity.alterarEntity(toNovo, toAntigo)) {
 								refreshTO();
 								JOptionPane.showMessageDialog(null, "O objeto foi alterado!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 							}
 							else {
-								JOptionPane.showMessageDialog(null, "O objeto " + txtObjeto.getText().substring(0, 1).toUpperCase() + txtObjeto.getText().substring(1).toLowerCase() + " já existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+								JOptionPane.showMessageDialog(null, "O objeto " + txtObjeto.getText().substring(0, 1).toUpperCase() + txtObjeto.getText().substring(1).toLowerCase() + " jï¿½ existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 							}
 
 						}
@@ -264,7 +284,7 @@ public class FrmConfigTipoObjeto extends JFrame {
 				if (list.getSelectedIndex() != -1) {
 					int selectedOption = JOptionPane.showOptionDialog(null, "Deseja remover o objeto " + list.getSelectedValue().toString().substring(0, 1).toUpperCase() + list.getSelectedValue().toString().substring(1).toLowerCase() + "?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 					if (selectedOption == JOptionPane.YES_OPTION) {
-						if (ManagerTipoObjeto.removerTipoObjeto(list.getSelectedValue().toString().toLowerCase()) == false) {
+						if (FoundThat.managerEntity.removerEntity(list.getSelectedValue().toString().toLowerCase())) {
 							String objetoRemovido = list.getSelectedValue().toString().substring(0, 1).toUpperCase() + list.getSelectedValue().toString().substring(1).toLowerCase();
 							dlm.removeElement(objetoRemovido);
 							JOptionPane.showMessageDialog(null, "O objeto " + objetoRemovido + " foi removido!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
@@ -335,8 +355,11 @@ public class FrmConfigTipoObjeto extends JFrame {
 	}
 
 	public static void refreshIS() {
-		//CÓPIA DO ARRAY ORIGINAL DE INSTITUICOES, PARA ORDENÁ-LO NA COMBOBOX!
-		ArrayList <Instituicao> instituicoesOrdenado = new ArrayList<Instituicao>(FoundThat.instituicoes);
+		//Cï¿½PIA DO ARRAY ORIGINAL DE INSTITUICOES, PARA ORDENï¿½-LO NA COMBOBOX!
+		ArrayList <Instituicao> instituicoesOrdenado = new ArrayList<>();
+		for(ModelStrategy is : FoundThat.instituicoes) {
+		    instituicoesOrdenado.add((Instituicao) is);
+        }
 		Collections.sort(instituicoesOrdenado);
 		dlmIS.removeAllElements();
 		for (Instituicao is : instituicoesOrdenado) {
@@ -347,7 +370,7 @@ public class FrmConfigTipoObjeto extends JFrame {
 	}
 
 	public static void refreshTO() {
-		//CÓPIA DO ARRAY ORIGINAL DE OBJETOS, PARA ORDENÁ-LO NA LIST!
+		//Cï¿½PIA DO ARRAY ORIGINAL DE OBJETOS, PARA ORDENï¿½-LO NA LIST!
 		ArrayList <TipoObjeto> objetosOrdenado = new ArrayList<TipoObjeto>(FoundThat.tipoObjetos);
 		Collections.sort(objetosOrdenado);
 		dlm.clear();

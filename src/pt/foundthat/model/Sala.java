@@ -1,17 +1,9 @@
 package pt.foundthat.model;
 
-public class Sala implements Comparable<Sala> {
-
-
-	private String nome;
+public class Sala extends ModelStrategy implements Comparable<Sala> {
 
 	public Sala(String nome) {
-		super();
 		this.nome = nome;
-	}
-
-	public String getNome() {
-		return nome;
 	}
 
 	public void setNome(String nome) {

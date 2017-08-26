@@ -1,30 +1,12 @@
 package pt.foundthat.model;
 
 
-public class Instituicao implements Comparable <Instituicao> {	
-	private int codigo;
-	private String nome;
+import pt.foundthat.controller.FoundThat;
+
+public class Instituicao extends ModelStrategy implements Comparable <Instituicao> {
 
 	public Instituicao(int codigo, String nome) {
-		super();		
 		this.codigo = codigo;		
-		this.nome = nome;
-
-	}
-
-	public int getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(int codigo) {
-		this.codigo = codigo;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
 		this.nome = nome;
 	}
 

@@ -6,7 +6,6 @@ import pt.foundthat.model.TipoObjeto;
 
 public class ManagerRegisto {
 
-
 	public static boolean isRegisto(String nome, String email, Object sala, Object objeto, String cor, String estado, String descricao) {
 		boolean res = false;
 		for (Registo reg : FoundThat.registos) {
@@ -31,8 +30,6 @@ public class ManagerRegisto {
 		return res;		
 	}
 
-
-
 	public static int getLastCode() {
 		if (FoundThat.registos.size() == 0) {
 			return 1;
@@ -41,7 +38,6 @@ public class ManagerRegisto {
 			return FoundThat.registos.get(FoundThat.registos.size() - 1).getCodigo()+1;
 		}
 	}
-
 }
 
 

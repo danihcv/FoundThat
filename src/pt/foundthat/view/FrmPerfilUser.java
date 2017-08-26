@@ -28,6 +28,7 @@ import javax.swing.border.EmptyBorder;
 
 import pt.foundthat.controller.FoundThat;
 import pt.foundthat.controller.ManagerTipoUser;
+import pt.foundthat.model.ModelStrategy;
 import pt.foundthat.model.TipoUser;
 
 public class FrmPerfilUser extends JFrame {
@@ -60,20 +61,21 @@ public class FrmPerfilUser extends JFrame {
 	 * Create the frame.
 	 */
 	public FrmPerfilUser() {
+		FoundThat.managerEntity = new ManagerTipoUser();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FrmPerfilUser.class.getResource("/pt/foundthat/resources/lupa.png")));
 		setTitle("Gerir perfil - FoundThat");
 		setResizable(false);
-		//OPCOES MESSAGEBOX(SIM/NÃO)
+		//OPCOES MESSAGEBOX(SIM/Nï¿½O)
 		String[] opcoes = new String[2];
 		opcoes[0] = new String("Sim");
-		opcoes[1] = new String("Não");
+		opcoes[1] = new String("Nï¿½o");
 
 		setBounds(100, 100, 450, 300);
 		this.setLocationRelativeTo(null);
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicação?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
+				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicaï¿½ï¿½o?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 				if (selectedOption == JOptionPane.YES_OPTION) {
 					try {
 						FoundThat.gravarFicheiro();
@@ -151,7 +153,8 @@ public class FrmPerfilUser extends JFrame {
 		list.setSelectedIndex(0);
 		txtNome.setText(list.getSelectedValue().toString());
 		//ASSOCIAR USER (LIST) AO TIPOUSER (COMBOBOX) ANTERIORMENTE ASSOCIADA
-		for (TipoUser tu : FoundThat.tipoUsers) {
+		for (ModelStrategy t : FoundThat.tipoUsers) {
+			TipoUser tu = (TipoUser)t;
 			if (tu.getNome().equals(list.getSelectedValue().toString().toLowerCase())) {
 				radioRegisto.setSelected(tu.isRegisto());
 				radioReclamacao.setSelected(tu.isReclamacao());
@@ -166,7 +169,8 @@ public class FrmPerfilUser extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				txtNome.setText(list.getSelectedValue().toString());
 				//ASSOCIAR USER (LIST) AO TIPOUSER (COMBOBOX) ANTERIORMENTE ASSOCIADA
-				for (TipoUser tu : FoundThat.tipoUsers) {
+				for (ModelStrategy t : FoundThat.tipoUsers) {
+					TipoUser tu = (TipoUser)t;
 					if (tu.getNome().equals(list.getSelectedValue().toString().toLowerCase())) {
 						radioRegisto.setSelected(tu.isRegisto());
 						radioReclamacao.setSelected(tu.isReclamacao());
@@ -204,8 +208,9 @@ public class FrmPerfilUser extends JFrame {
 					JOptionPane.showMessageDialog(null, "Introduza um nome!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else {
-					if (!ManagerTipoUser.adicionarPerfil(txtNome.getText().toLowerCase(), radioRegisto.isSelected(), radioReclamacao.isSelected(), radioImportacao.isSelected(), radioListagens.isSelected(), radioDoacoes.isSelected(), radioConfiguracoes.isSelected())) {
-						JOptionPane.showMessageDialog(null, "O perfil " + txtNome.getText() + " já existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;				
+					TipoUser tu = new TipoUser(-1, txtNome.getText().toLowerCase(), radioRegisto.isSelected(), radioReclamacao.isSelected(), radioImportacao.isSelected(), radioListagens.isSelected(), radioDoacoes.isSelected(), radioConfiguracoes.isSelected());
+					if (!FoundThat.managerEntity.adicionarEntity(tu)) {
+						JOptionPane.showMessageDialog(null, "O perfil " + txtNome.getText() + " jï¿½ existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;				
 					}
 					else {
 						dlm.addElement(txtNome.getText());
@@ -245,7 +250,7 @@ public class FrmPerfilUser extends JFrame {
 				if (list.getSelectedIndex() != -1) {
 					int selectedOption = JOptionPane.showOptionDialog(null, "Deseja remover o perfil " + list.getSelectedValue().toString() + "?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 					if (selectedOption == JOptionPane.YES_OPTION) {
-						if (!ManagerTipoUser.removerPerfil(list.getSelectedValue().toString().toLowerCase())) {
+						if (FoundThat.managerEntity.removerEntity(list.getSelectedValue().toString().toLowerCase())) {
 							String perfilRemovido = list.getSelectedValue().toString();
 							dlm.removeElement(perfilRemovido);
 							JOptionPane.showMessageDialog(null, "O perfil " + perfilRemovido + " foi removido!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
@@ -276,12 +281,14 @@ public class FrmPerfilUser extends JFrame {
 					else {
 						int selectedOption = JOptionPane.showOptionDialog(null, "Deseja alterar o perfil " + list.getSelectedValue().toString() + " pelo perfil " + txtNome.getText().substring(0, 1).toUpperCase() + txtNome.getText().substring(1).toLowerCase()+ "?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 						if (selectedOption == JOptionPane.YES_OPTION) {
-							if (ManagerTipoUser.alterarPerfil(txtNome.getText().toLowerCase(), list.getSelectedValue().toString().toLowerCase(), radioRegisto.isSelected(), radioReclamacao.isSelected(), radioImportacao.isSelected(), radioListagens.isSelected(), radioDoacoes.isSelected(), radioConfiguracoes.isSelected()) == true) {
+							TipoUser tuNovo = new TipoUser(-1, txtNome.getText().toLowerCase(), radioRegisto.isSelected(), radioReclamacao.isSelected(), radioImportacao.isSelected(), radioListagens.isSelected(), radioDoacoes.isSelected(), radioConfiguracoes.isSelected());
+							TipoUser tuAntigo = new TipoUser(-1, list.getSelectedValue().toString().toLowerCase(), radioRegisto.isSelected(), radioReclamacao.isSelected(), radioImportacao.isSelected(), radioListagens.isSelected(), radioDoacoes.isSelected(), radioConfiguracoes.isSelected());
+							if (FoundThat.managerEntity.alterarEntity(tuNovo, tuAntigo)) {
 								refreshUser();
 								JOptionPane.showMessageDialog(null, "O perfil foi alterado!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 							}
 							else {
-								JOptionPane.showMessageDialog(null, "O perfil " + txtNome.getText() + " já existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+								JOptionPane.showMessageDialog(null, "O perfil " + txtNome.getText() + " jï¿½ existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 							}
 
 						}
@@ -353,8 +360,11 @@ public class FrmPerfilUser extends JFrame {
 	}
 
 	public static void refreshUser() {
-		//CÓPIA DO ARRAY ORIGINAL DE TIPO USERS, PARA ORDENÁ-LO NA LIST!
-		ArrayList <TipoUser> tipoUsersOrdenado = new ArrayList<TipoUser>(FoundThat.tipoUsers);
+		//Cï¿½PIA DO ARRAY ORIGINAL DE TIPO USERS, PARA ORDENï¿½-LO NA LIST!
+		ArrayList <TipoUser> tipoUsersOrdenado = new ArrayList<>();
+		for (ModelStrategy t : FoundThat.tipoUsers) {
+			tipoUsersOrdenado.add((TipoUser) t);
+		}
 		Collections.sort(tipoUsersOrdenado);
 		dlm.clear();
 		for (TipoUser tu : tipoUsersOrdenado) {

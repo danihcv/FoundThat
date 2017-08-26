@@ -28,6 +28,7 @@ import javax.swing.border.EmptyBorder;
 
 import pt.foundthat.controller.FoundThat;
 import pt.foundthat.controller.ManagerUser;
+import pt.foundthat.model.ModelStrategy;
 import pt.foundthat.model.TipoUser;
 import pt.foundthat.model.User;
 
@@ -69,17 +70,17 @@ public class FrmGerirUser extends JFrame {
 		setResizable(false);
 		setTitle("Gerir Utilizador - FoundThat");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FrmGerirUser.class.getResource("/pt/foundthat/resources/lupa.png")));
-		//OPCOES MESSAGEBOX(SIM/NÃO)
+		//OPCOES MESSAGEBOX(SIM/Nï¿½O)
 		String[] opcoes = new String[2];
 		opcoes[0] = new String("Sim");
-		opcoes[1] = new String("Não");
+		opcoes[1] = new String("Nï¿½o");
 
 		setBounds(100, 100, 450, 300);
 		this.setLocationRelativeTo(null);
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicação?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
+				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicaï¿½ï¿½o?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 				if (selectedOption == JOptionPane.YES_OPTION) {
 					try {
 						FoundThat.gravarFicheiro();
@@ -207,12 +208,12 @@ public class FrmGerirUser extends JFrame {
 					JOptionPane.showMessageDialog(null, "Insira os dados!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else if (!(txtPassword.getText().equals(txtConfirmarPassword.getText()))) {
-					JOptionPane.showMessageDialog(null, "As passwords não coincididem!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+					JOptionPane.showMessageDialog(null, "As passwords nï¿½o coincididem!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 					clear();
 				}
 				else {
 					if (!ManagerUser.adicionarUser(txtUser.getText(), txtPassword.getText(), (cmbPerfil.getSelectedItem().toString().toLowerCase()))) {
-						JOptionPane.showMessageDialog(null, "O utilizador " + txtUser.getText() + " já existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+						JOptionPane.showMessageDialog(null, "O utilizador " + txtUser.getText() + " jï¿½ existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 						clear();
 					}
 					else {
@@ -292,7 +293,7 @@ public class FrmGerirUser extends JFrame {
 						JOptionPane.showMessageDialog(null, "Introduza um utilizador!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 					}
 					else if (!(txtPassword.getText().equals(txtConfirmarPassword.getText()))) {
-						JOptionPane.showMessageDialog(null, "As passwords não coincididem!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+						JOptionPane.showMessageDialog(null, "As passwords nï¿½o coincididem!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 						clear();
 					}
 					else {
@@ -304,7 +305,7 @@ public class FrmGerirUser extends JFrame {
 								clear();
 							}
 							else {
-								JOptionPane.showMessageDialog(null, "O utilizador " + txtUser.getText() + " já existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+								JOptionPane.showMessageDialog(null, "O utilizador " + txtUser.getText() + " jï¿½ existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 							}
 
 						}
@@ -371,8 +372,11 @@ public class FrmGerirUser extends JFrame {
 
 	@SuppressWarnings("unchecked")
 	public static void refreshTipoUser() {
-		//CÓPIA DO ARRAY ORIGINAL DE TIPOUSERS, PARA ORDENÁ-LO NA COMBOBOX!
-		ArrayList <TipoUser> tipoUsersOrdenado = new ArrayList<TipoUser>(FoundThat.tipoUsers);
+		//Cï¿½PIA DO ARRAY ORIGINAL DE TIPOUSERS, PARA ORDENï¿½-LO NA COMBOBOX!
+		ArrayList <TipoUser> tipoUsersOrdenado = new ArrayList<TipoUser>();
+		for (ModelStrategy t : FoundThat.tipoUsers) {
+		    tipoUsersOrdenado.add((TipoUser) t);
+        }
 		Collections.sort(tipoUsersOrdenado);
 		cmbPerfil.removeAllItems();
 		for (TipoUser us : tipoUsersOrdenado) {
@@ -381,7 +385,7 @@ public class FrmGerirUser extends JFrame {
 	}
 
 	public static void refreshUser() {
-		//CÓPIA DO ARRAY ORIGINAL DE USERS, PARA ORDENÁ-LO NA LIST!
+		//Cï¿½PIA DO ARRAY ORIGINAL DE USERS, PARA ORDENï¿½-LO NA LIST!
 		ArrayList <User> usersOrdenado = new ArrayList<User>(FoundThat.users);
 		Collections.sort(usersOrdenado);
 		dlm.clear();

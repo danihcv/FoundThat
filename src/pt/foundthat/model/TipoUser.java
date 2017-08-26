@@ -1,9 +1,7 @@
 package pt.foundthat.model;
 
-public class TipoUser implements Comparable <TipoUser>{
+public class TipoUser extends ModelStrategy implements Comparable <TipoUser>{
 
-	private int codigo;
-	private String nome;
 	private boolean registo;
 	private boolean reclamacao;
 	private boolean importacao;
@@ -14,7 +12,6 @@ public class TipoUser implements Comparable <TipoUser>{
 	public TipoUser(int codigo, String nome, boolean registo, boolean reclamacao,
 			boolean importacao, boolean listagens, boolean doacoes,
 			boolean configuracoes) {
-		super();
 		this.codigo = codigo;
 		this.nome = nome;
 		this.registo = registo;
@@ -23,14 +20,6 @@ public class TipoUser implements Comparable <TipoUser>{
 		this.listagens = listagens;
 		this.doacoes = doacoes;
 		this.configuracoes = configuracoes;
-	}
-
-	public int getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(int codigo) {
-		this.codigo = codigo;
 	}
 
 	public boolean isRegisto() {
@@ -79,10 +68,6 @@ public class TipoUser implements Comparable <TipoUser>{
 
 	public void setConfiguracoes(boolean configuracoes) {
 		this.configuracoes = configuracoes;
-	}
-
-	public String getNome() {
-		return nome;
 	}
 
 	public void setNome(String nome) {

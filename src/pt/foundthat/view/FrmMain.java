@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import pt.foundthat.controller.FoundThat;
+import pt.foundthat.model.ModelStrategy;
 import pt.foundthat.model.TipoUser;
 import pt.foundthat.model.User;
 
@@ -53,10 +54,10 @@ public class FrmMain extends JFrame {
 
 	public FrmMain() {
 		setResizable(false);
-		//OPCOES MESSAGEBOX(SIM/NÃO)
+		//OPCOES MESSAGEBOX(SIM/Nï¿½O)
 		String[] opcoes = new String[2];
 		opcoes[0] = new String("Sim");
-		opcoes[1] = new String("Não");
+		opcoes[1] = new String("Nï¿½o");
 
 		setFont(new Font("Myriad Pro", Font.PLAIN, 12));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FrmMain.class.getResource("/pt/foundthat/resources/lupa.png")));
@@ -67,7 +68,7 @@ public class FrmMain extends JFrame {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicação?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
+				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicaï¿½ï¿½o?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 				if (selectedOption == JOptionPane.YES_OPTION) {
 					try {
 						FoundThat.gravarFicheiro();
@@ -98,13 +99,13 @@ public class FrmMain extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (FoundThat.salas.isEmpty()) {
-					JOptionPane.showMessageDialog(getParent(), "Não tem salas adicionadas!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+					JOptionPane.showMessageDialog(getParent(), "Nï¿½o tem salas adicionadas!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else if (FoundThat.tipoObjetos.isEmpty()) {
-					JOptionPane.showMessageDialog(getParent(), "Não tem objetos adicionados!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+					JOptionPane.showMessageDialog(getParent(), "Nï¿½o tem objetos adicionados!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else if (FoundThat.salas.isEmpty() && FoundThat.tipoObjetos.isEmpty()) {
-					JOptionPane.showMessageDialog(getParent(), "Não tem salas, nem objetos adicionados!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+					JOptionPane.showMessageDialog(getParent(), "Nï¿½o tem salas, nem objetos adicionados!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else {
 					dispose();
@@ -133,7 +134,7 @@ public class FrmMain extends JFrame {
 		});
 		menuPrincipal.add(menuRegisto);
 
-		//RECLAMAÇÃO
+		//RECLAMAï¿½ï¿½O
 		menuReclamacao = new JMenu("Reclama\u00E7\u00E3o");
 		menuReclamacao.setBackground(new Color(25, 25, 112));
 		menuReclamacao.setFont(new Font("Myanmar Text", Font.PLAIN, 18));
@@ -141,9 +142,9 @@ public class FrmMain extends JFrame {
 		menuReclamacao.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//VERIFICA SE O ARRAY SALAS E O ARRAY OBJETOS ESTÃO VAZIOS, CASO ESTEJAM NÃO PERMITEM A ENTRADA NO RESPETIVO MENU
+				//VERIFICA SE O ARRAY SALAS E O ARRAY OBJETOS ESTï¿½O VAZIOS, CASO ESTEJAM Nï¿½O PERMITEM A ENTRADA NO RESPETIVO MENU
 				if (FoundThat.salas.isEmpty() || FoundThat.tipoObjetos.isEmpty()) {
-					JOptionPane.showMessageDialog(getParent(), "Não tem salas e/ou objetos adicionados!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+					JOptionPane.showMessageDialog(getParent(), "Nï¿½o tem salas e/ou objetos adicionados!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else {
 					dispose();
@@ -171,15 +172,15 @@ public class FrmMain extends JFrame {
 		});
 		menuPrincipal.add(menuReclamacao);
 
-		//IMPORTAÇÃO
+		//IMPORTAï¿½ï¿½O
 		menuImportacao = new JMenu("Importa\u00E7\u00E3o");
 		menuImportacao.setBackground(new Color(25, 25, 112));
 		menuImportacao.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//VERIFICA SE O ARRAY SALAS E O ARRAY OBJETOS ESTÃO VAZIOS, CASO ESTEJAM NÃO PERMITEM A ENTRADA NO RESPETIVO MENU
+				//VERIFICA SE O ARRAY SALAS E O ARRAY OBJETOS ESTï¿½O VAZIOS, CASO ESTEJAM Nï¿½O PERMITEM A ENTRADA NO RESPETIVO MENU
 				if (FoundThat.salas.isEmpty() || FoundThat.tipoObjetos.isEmpty()) {
-					JOptionPane.showMessageDialog(getParent(), "Não tem salas e/ou objetos adicionados!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+					JOptionPane.showMessageDialog(getParent(), "Nï¿½o tem salas e/ou objetos adicionados!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else {
 					dispose();
@@ -214,9 +215,9 @@ public class FrmMain extends JFrame {
 		menuListagens.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//VERIFICA SE O ARRAY SALAS E O ARRAY OBJETOS ESTÃO VAZIOS, CASO ESTEJAM NÃO PERMITEM A ENTRADA NO RESPETIVO MENU
+				//VERIFICA SE O ARRAY SALAS E O ARRAY OBJETOS ESTï¿½O VAZIOS, CASO ESTEJAM Nï¿½O PERMITEM A ENTRADA NO RESPETIVO MENU
 				if (FoundThat.salas.isEmpty() || FoundThat.tipoObjetos.isEmpty()) {
-					JOptionPane.showMessageDialog(getParent(), "Não tem salas e/ou objetos adicionados!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+					JOptionPane.showMessageDialog(getParent(), "Nï¿½o tem salas e/ou objetos adicionados!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				} 
 				else {
 					try {
@@ -227,7 +228,7 @@ public class FrmMain extends JFrame {
 						}
 						else {
 							if (FoundThat.registoDoacoes.size() == 0) {
-								JOptionPane.showMessageDialog(getParent(), "A instituição " + FrmLogin.txtUser.getText() + " não tem objetos doados!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;	
+								JOptionPane.showMessageDialog(getParent(), "A instituiï¿½ï¿½o " + FrmLogin.txtUser.getText() + " nï¿½o tem objetos doados!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;	
 							}
 							else {
 								dispose();
@@ -265,15 +266,15 @@ public class FrmMain extends JFrame {
 		menuListagens.setForeground(new Color(192, 192, 192));
 		menuPrincipal.add(menuListagens);
 
-		//DOAÇÕES
+		//DOAï¿½ï¿½ES
 		menuDoacoes = new JMenu("Doa\u00E7\u00F5es");
 		menuDoacoes.setBackground(new Color(255, 255, 255));
 		menuDoacoes.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//VERIFICA SE O ARRAY SALAS E O ARRAY OBJETOS ESTÃO VAZIOS, CASO ESTEJAM NÃO PERMITEM A ENTRADA NO RESPETIVO MENU
+				//VERIFICA SE O ARRAY SALAS E O ARRAY OBJETOS ESTï¿½O VAZIOS, CASO ESTEJAM Nï¿½O PERMITEM A ENTRADA NO RESPETIVO MENU
 				if (FoundThat.salas.isEmpty() || FoundThat.tipoObjetos.isEmpty()) {
-					JOptionPane.showMessageDialog(getParent(), "Não tem salas e/ou objetos adicionados!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+					JOptionPane.showMessageDialog(getParent(), "Nï¿½o tem salas e/ou objetos adicionados!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else {
 					try {
@@ -309,7 +310,7 @@ public class FrmMain extends JFrame {
 		menuDoacoes.setForeground(new Color(192, 192, 192));
 		menuPrincipal.add(menuDoacoes);
 
-		//CONFIGURAÇÕES
+		//CONFIGURAï¿½ï¿½ES
 		menuConfiguracoes = new JMenu("Configura\u00E7\u00F5es");
 		JMenuItem menuSalas = new JMenuItem("Gest\u00E3o de salas");
 		menuConfiguracoes.setSelected(false);
@@ -491,7 +492,7 @@ public class FrmMain extends JFrame {
 		lblDia.setBounds(449, 11, 94, 27);
 		contentPane.add(lblDia);
 
-		//BOTÃO TERMINAR SESSÃO
+		//BOTï¿½O TERMINAR SESSï¿½O
 		JButton btnTerminarSessao = new JButton("TERMINAR SESS\u00C3O");
 		btnTerminarSessao.addMouseListener(new MouseAdapter() {
 			@Override
@@ -528,8 +529,9 @@ public class FrmMain extends JFrame {
 
 	public static  void checkUser() {
 		for (User us : FoundThat.users) {
-			if (FrmLogin.txtUser.getText().toString().equals(us.getUser())) {
-				for (TipoUser tu : FoundThat.tipoUsers) {
+			if (FrmLogin.txtUser.getText().equals(us.getUser())) {
+				for (ModelStrategy t : FoundThat.tipoUsers) {
+					TipoUser tu = (TipoUser) t;
 					if (us.getTipo().getCodigo() == tu.getCodigo()) {
 						menuRegisto.setVisible(tu.isRegisto());
 						menuReclamacao.setVisible(tu.isReclamacao());

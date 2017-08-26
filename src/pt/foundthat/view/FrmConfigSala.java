@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.DefaultListModel;
@@ -27,6 +28,8 @@ import javax.swing.border.LineBorder;
 
 import pt.foundthat.controller.FoundThat;
 import pt.foundthat.controller.ManagerSala;
+import pt.foundthat.model.Instituicao;
+import pt.foundthat.model.ModelStrategy;
 import pt.foundthat.model.Sala;
 
 public class FrmConfigSala extends JFrame {
@@ -63,11 +66,12 @@ public class FrmConfigSala extends JFrame {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public FrmConfigSala() {
+		FoundThat.managerEntity = new ManagerSala();
 		setResizable(false);
-		//OPCOES MESSAGEBOX(SIM/NÃO)
+		//OPCOES MESSAGEBOX(SIM/Nï¿½O)
 		String[] opcoes = new String[2];
 		opcoes[0] = new String("Sim");
-		opcoes[1] = new String("Não");
+		opcoes[1] = new String("Nï¿½o");
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FrmConfigSala.class.getResource("/pt/foundthat/resources/lupa.png")));
 		setTitle("Gest\u00E3o de Salas - FoundThat");
@@ -76,7 +80,7 @@ public class FrmConfigSala extends JFrame {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicação?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
+				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicaï¿½ï¿½o?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 				if (selectedOption == JOptionPane.YES_OPTION) {
 					try {
 						FoundThat.gravarFicheiro();
@@ -155,8 +159,9 @@ public class FrmConfigSala extends JFrame {
 					JOptionPane.showMessageDialog(null, "Introduza uma sala!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else {
-					if (ManagerSala.adicionarSala(txtSala.getText().toUpperCase()) == false) {
-						JOptionPane.showMessageDialog(null, "A sala " + txtSala.getText().toUpperCase() + " já existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;				
+					ModelStrategy s = new Sala(txtSala.getText().toUpperCase());
+					if (!FoundThat.managerEntity.adicionarEntity(s)) {
+						JOptionPane.showMessageDialog(null, "A sala " + txtSala.getText().toUpperCase() + " jï¿½ existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;				
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "A sala " + txtSala.getText().toUpperCase() + " foi adicionada!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;	
@@ -188,7 +193,7 @@ public class FrmConfigSala extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (list.getSelectedIndex() != -1) {
 					if (list.getSelectedValue().equals(txtSala.getText().toUpperCase())) {
-						JOptionPane.showMessageDialog(null, "A sala " + txtSala.getText().toUpperCase() + " já existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+						JOptionPane.showMessageDialog(null, "A sala " + txtSala.getText().toUpperCase() + " jï¿½ existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 					}
 					else if (txtSala.getText().equals("")) {
 						JOptionPane.showMessageDialog(null, "Introduza uma sala!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
@@ -196,12 +201,15 @@ public class FrmConfigSala extends JFrame {
 					else {
 						int selectedOption = JOptionPane.showOptionDialog(null, "Deseja alterar a sala " + list.getSelectedValue().toString() + " pela sala " + txtSala.getText() + "?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 						if (selectedOption == JOptionPane.YES_OPTION) {
-							if (ManagerSala.alterarSala(txtSala.getText().toUpperCase(), list.getSelectedValue().toString()) == true) {
+						    ModelStrategy sAntiga = new Sala(list.getSelectedValue().toString());
+						    ModelStrategy sNova = new Sala(txtSala.getText().toUpperCase());
+
+							if (FoundThat.managerEntity.alterarEntity(sNova, sAntiga)) {
 								JOptionPane.showMessageDialog(null, "A sala foi alterada!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 								refresh();
 							}
 							else {
-								JOptionPane.showMessageDialog(null, "A sala " + txtSala.getText().toUpperCase() + " já existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+								JOptionPane.showMessageDialog(null, "A sala " + txtSala.getText().toUpperCase() + " jï¿½ existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 							}
 						}
 					}
@@ -237,7 +245,7 @@ public class FrmConfigSala extends JFrame {
 				if (list.getSelectedIndex() != -1) {
 					int selectedOption = JOptionPane.showOptionDialog(null, "Deseja remover a sala " + list.getSelectedValue().toString() + "?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 					if (selectedOption == JOptionPane.YES_OPTION) {
-						if (ManagerSala.removerSala(txtSala.getText().toUpperCase()) == false) {
+						if (FoundThat.managerEntity.removerEntity(txtSala.getText().toUpperCase())) {
 							String salaRemovida = list.getSelectedValue().toString();
 							JOptionPane.showMessageDialog(null, "A sala " + salaRemovida + " foi removida!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 							refresh();
@@ -306,12 +314,15 @@ public class FrmConfigSala extends JFrame {
 	}
 
 	public static void refresh() {
-		Collections.sort(FoundThat.salas);
+        ArrayList<Sala> salasOrdenado = new ArrayList<>();
+        for (ModelStrategy sala : FoundThat.salas) {
+            salasOrdenado.add((Sala) sala);
+        }
+		Collections.sort(salasOrdenado);
 		dlm.clear();
-		for (Sala s : FoundThat.salas) {
+		for (Sala s : salasOrdenado) {
 			dlm.addElement(s.toString());
 		}
-
 	}
 }
 

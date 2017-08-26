@@ -25,6 +25,7 @@ import javax.swing.border.LineBorder;
 
 import pt.foundthat.controller.FoundThat;
 import pt.foundthat.controller.ManagerRegisto;
+import pt.foundthat.model.ModelStrategy;
 import pt.foundthat.model.Sala;
 import pt.foundthat.model.TipoObjeto;
 
@@ -58,10 +59,10 @@ public class FrmRegisto extends JFrame {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public FrmRegisto() {
-		//OPCOES MESSAGEBOX(SIM/NÃO)
+		//OPCOES MESSAGEBOX(SIM/Nï¿½O)
 		String[] opcoes = new String[2];
 		opcoes[0] = new String("Sim");
-		opcoes[1] = new String("Não");
+		opcoes[1] = new String("Nï¿½o");
 
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FrmRegisto.class.getResource("/pt/foundthat/resources/lupa.png")));
@@ -73,7 +74,7 @@ public class FrmRegisto extends JFrame {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicação?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
+				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicaï¿½ï¿½o?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 				if (selectedOption == JOptionPane.YES_OPTION) {
 					try {
 						FoundThat.gravarFicheiro();
@@ -169,7 +170,7 @@ public class FrmRegisto extends JFrame {
 		cmbSala.setForeground(new Color(25, 25, 112));
 		cmbSala.setBackground(new Color(220, 220, 220));
 
-		for (Sala s : FoundThat.salas) {
+		for (ModelStrategy s : FoundThat.salas) {
 			cmbSala.addItem(s);
 		}
 		cmbSala.setSelectedIndex(-1);
@@ -197,7 +198,7 @@ public class FrmRegisto extends JFrame {
 
 		cmbEstado.addItem("Bom");
 		cmbEstado.addItem("Mau");
-		cmbEstado.addItem("Razoável");
+		cmbEstado.addItem("Razoï¿½vel");
 		cmbEstado.setSelectedIndex(-1);
 
 		cmbEstado.setBounds(162, 146, 102, 20);
@@ -252,17 +253,17 @@ public class FrmRegisto extends JFrame {
 						txtEmail.setText("");
 					}*/
 					else if (txtDesc.getText().length() > 50) {
-						JOptionPane.showMessageDialog(null, "A descrição tem mais de 50 caracteres!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+						JOptionPane.showMessageDialog(null, "A descriï¿½ï¿½o tem mais de 50 caracteres!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 						txtDesc.setText("");
 					}
 					else {
-						if (FoundThat.isNumber(txtNome.getText()) == false) {
+						if (!FoundThat.isNumber(txtNome.getText())) {
 							cmbObjeto.removeAllItems();
 							Collections.sort(FoundThat.tipoObjetos);
 							for (TipoObjeto to : FoundThat.tipoObjetos) {
 								cmbObjeto.addItem(to);	
 							}
-							if (ManagerRegisto.adicionarRegisto(txtNome.getText(), txtEmail.getText(), cmbSala.getSelectedItem(), cmbObjeto.getSelectedItem(), cmbCor.getSelectedItem().toString().toLowerCase(), cmbEstado.getSelectedItem().toString().toLowerCase(), txtDesc.getText()) == true) {
+							if (ManagerRegisto.adicionarRegisto(txtNome.getText(), txtEmail.getText(), cmbSala.getSelectedItem(), cmbObjeto.getSelectedItem(), cmbCor.getSelectedItem().toString().toLowerCase(), cmbEstado.getSelectedItem().toString().toLowerCase(), txtDesc.getText())) {
 								FoundThat.gravarFicheiro();
 								JOptionPane.showMessageDialog(null, "Registado com sucesso!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 								refresh();
@@ -272,7 +273,7 @@ public class FrmRegisto extends JFrame {
 							}
 						}
 						else {
-							JOptionPane.showMessageDialog(null, "Não pode inserir números no nome! ", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+							JOptionPane.showMessageDialog(null, "Nï¿½o pode inserir nï¿½meros no nome! ", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 							txtNome.setText("");
 						}
 					}
@@ -314,7 +315,7 @@ public class FrmRegisto extends JFrame {
 		btnLimpar.setBounds(191, 237, 89, 23);
 		contentPane.add(btnLimpar);
 
-		//BOTÃO SAIR (VOLTA AO MENU PRINCIPAL)
+		//BOTï¿½O SAIR (VOLTA AO MENU PRINCIPAL)
 		JButton btnSair = new JButton("Sair");
 		btnSair.setBorder(null);
 		btnSair.addMouseListener(new MouseAdapter() {

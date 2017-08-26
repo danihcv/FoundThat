@@ -23,11 +23,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import pt.foundthat.controller.FoundThat;
+//import pt.foundthat.controller.ManagerReclamacao;
 import pt.foundthat.controller.ManagerReclamacao;
+import pt.foundthat.model.Registo;
 import pt.foundthat.model.TipoObjeto;
 
 
-public class FrmReclamacao extends JFrame {
+class FrmReclamacao extends JFrame {
 
 	/**
 	 * 
@@ -47,12 +49,13 @@ public class FrmReclamacao extends JFrame {
 	 * Create the frame.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public FrmReclamacao() {
+	FrmReclamacao() {
 		setResizable(false);
-		//OPCOES MESSAGEBOX(SIM/NÃO)
+        FoundThat.managerAction = new ManagerReclamacao();
+		//OPCOES MESSAGEBOX(SIM/Nï¿½O)
 		String[] opcoes = new String[2];
 		opcoes[0] = new String("Sim");
-		opcoes[1] = new String("Não");
+		opcoes[1] = new String("Nï¿½o");
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FrmReclamacao.class.getResource("/pt/foundthat/resources/lupa.png")));
 		setTitle("Reclama\u00E7\u00E3o - FoundThat");
@@ -62,7 +65,7 @@ public class FrmReclamacao extends JFrame {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicação?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
+				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicaï¿½ï¿½o?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 				if (selectedOption == JOptionPane.YES_OPTION) {
 					try {
 						FoundThat.gravarFicheiro();
@@ -92,7 +95,7 @@ public class FrmReclamacao extends JFrame {
 		contentPane.add(lblObjeto);
 
 		//COMBOBOX OBJETO
-		//associar tipo de objetos à combobox
+		//associar tipo de objetos ï¿½ combobox
 		cmbObjeto = new JComboBox();
 		cmbObjeto.setBackground(new Color(220, 220, 220));
 		for (TipoObjeto to : FoundThat.tipoObjetos) {
@@ -116,7 +119,7 @@ public class FrmReclamacao extends JFrame {
 					}
 
 					String[][] regs = new String[cont][5];
-					String[] nomeColunas = {"Código", "Objeto", "Cor", "Estado", "Sala"};
+					String[] nomeColunas = {"Cï¿½digo", "Objeto", "Cor", "Estado", "Sala"};
 
 					int c = 0;
 					for (int i = 0; i < FoundThat.registos.size(); i++) {
@@ -147,10 +150,11 @@ public class FrmReclamacao extends JFrame {
 		contentPane.add(cmbObjeto);
 
 		//JTABLE
-		String[] nomeColunas = {"Código", "Objeto", "Cor", "Estado", "Sala"};
+		String[] nomeColunas = {"Cï¿½digo", "Objeto", "Cor", "Estado", "Sala"};
 		@SuppressWarnings("unused")
 		int cont = 0;
 		String[][] regs = new String[FoundThat.registos.size()][5];
+		System.out.println(FoundThat.registos.size());
 		for (int i = 0; i < FoundThat.registos.size(); i++) {
 			regs[i][0] = Integer.toString(FoundThat.registos.get(i).getCodigo());
 			regs[i][1] = FoundThat.registos.get(i).getObjeto().getNome().substring(0, 1).toUpperCase() + FoundThat.registos.get(i).getObjeto().getNome().substring(1).toLowerCase();
@@ -243,7 +247,7 @@ public class FrmReclamacao extends JFrame {
 				}
 				else {
 					int cod = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
-					if (ManagerReclamacao.reclamacarObjeto(cod) == true) {
+					if (FoundThat.managerAction.execute(cod) != -1) {
 						try {
 							FoundThat.gravarFicheiro();
 							JOptionPane.showMessageDialog(null, "Devolvido com sucesso!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
@@ -260,7 +264,7 @@ public class FrmReclamacao extends JFrame {
 		btnDevolver.setBounds(44, 178, 116, 23);
 		contentPane.add(btnDevolver);
 
-		//BOTÃO +INFO
+		//BOTï¿½O +INFO
 		JButton btnInfo = new JButton("+Info");
 		btnInfo.setBorder(null);
 		btnInfo.addMouseListener(new MouseAdapter() {
@@ -282,13 +286,19 @@ public class FrmReclamacao extends JFrame {
 					JOptionPane.showMessageDialog(null, "Selecione um objeto!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else {
-					int cod = (Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString()) - 1);
-					String info = "Nome: " + FoundThat.registos.get(cod).getNome() + "\n" + "E-mail: " + FoundThat.registos.get(cod).getEmail() + 
-							"\n" + "Sala: " + FoundThat.registos.get(cod).getSala() + "\n" + "Dia: " + FoundThat.formatoDataRegisto.format(FoundThat.registos.get(cod).getData()) + 
-							"\n" + "Hora: " + FoundThat.registos.get(cod).getHora() + "\n" + "Tipo de objeto: " + FoundThat.registos.get(cod).getObjeto().getNome().substring(0, 1).toUpperCase() + 
-							FoundThat.registos.get(cod).getObjeto().getNome().substring(1).toLowerCase() + "\n" + "Cor: " + FoundThat.registos.get(cod).getCor().substring(0, 1).toUpperCase() +  
-							FoundThat.registos.get(cod).getCor().substring(1).toLowerCase() + "\n" + "Estado: " + FoundThat.registos.get(cod).getEstado().substring(0, 1).toUpperCase() + 
-							FoundThat.registos.get(cod).getEstado().substring(1).toLowerCase() + "\n" + "Descrição: " + FoundThat.registos.get(cod).getDescricao() ;
+                    int cod = (Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString()));
+					int idx = -1;
+					for (int i = 0; i < FoundThat.registos.size() && idx == -1; i++) {
+                        if (FoundThat.registos.get(i).getCodigo() == cod) {
+					        idx = i;
+                        }
+                    }
+                    String info = "Nome: " + FoundThat.registos.get(idx).getNome() + "\n" + "E-mail: " + FoundThat.registos.get(idx).getEmail() +
+							"\n" + "Sala: " + FoundThat.registos.get(idx).getSala() + "\n" + "Dia: " + FoundThat.formatoDataRegisto.format(FoundThat.registos.get(idx).getData()) +
+							"\n" + "Hora: " + FoundThat.registos.get(idx).getHora() + "\n" + "Tipo de objeto: " + FoundThat.registos.get(idx).getObjeto().getNome().substring(0, 1).toUpperCase() +
+							FoundThat.registos.get(idx).getObjeto().getNome().substring(1).toLowerCase() + "\n" + "Cor: " + FoundThat.registos.get(idx).getCor().substring(0, 1).toUpperCase() +
+							FoundThat.registos.get(idx).getCor().substring(1).toLowerCase() + "\n" + "Estado: " + FoundThat.registos.get(idx).getEstado().substring(0, 1).toUpperCase() +
+							FoundThat.registos.get(idx).getEstado().substring(1).toLowerCase() + "\n" + "Descriï¿½ï¿½o: " + FoundThat.registos.get(idx).getDescricao() ;
 					JOptionPane.showMessageDialog(null, info, "FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 			}
@@ -296,7 +306,7 @@ public class FrmReclamacao extends JFrame {
 		btnInfo.setBounds(170, 178, 116, 23);
 		contentPane.add(btnInfo);
 
-		//BOTÃO LIMPAR
+		//BOTï¿½O LIMPAR
 		JButton btnLimpar = new JButton("Limpar");
 		btnLimpar.setBorder(null);
 		btnLimpar.addMouseListener(new MouseAdapter() {
@@ -329,7 +339,7 @@ public class FrmReclamacao extends JFrame {
 		cmbObjeto.setSelectedIndex(-1);
 		dtm.setRowCount(0);
 		dtm.setColumnCount(0);
-		String[] nomeColunas = {"Código", "Objeto", "Cor", "Estado", "Sala"};
+		String[] nomeColunas = {"Cï¿½digo", "Objeto", "Cor", "Estado", "Sala"};
 		@SuppressWarnings("unused")
 		int cont = 0;
 		String[][] regs = new String[FoundThat.registos.size()][5];

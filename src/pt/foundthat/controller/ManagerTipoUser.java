@@ -1,80 +1,85 @@
 package pt.foundthat.controller;
 
+import pt.foundthat.model.ModelStrategy;
+import pt.foundthat.model.TipoObjeto;
 import pt.foundthat.model.TipoUser;
 
-public class ManagerTipoUser {
+public class ManagerTipoUser extends ManagerEntityStrategy {
 
-	public static boolean isPerfilUser(String nome) {
+	public boolean isPerfilUser(String nome) {
 		boolean res = false;
-		for (TipoUser tu : FoundThat.tipoUsers) {
+		for (ModelStrategy tu : FoundThat.tipoUsers) {
 			if (tu.getNome().equals(nome)) {
 				res = true;
-			}			
-		}	
+			}
+		}
 		return res;
 	}
 
-	public static boolean isPerfil(String nome, Boolean registo, Boolean reclamacao, Boolean importacao, Boolean listagens, Boolean doacoes, Boolean configuracoes) {
-
+	//public boolean isEntity(String nome, Boolean registo, Boolean reclamacao, Boolean importacao, Boolean listagens, Boolean doacoes, Boolean configuracoes) {
+	public boolean isEntity(ModelStrategy entity) {
+        TipoUser ent = (TipoUser) entity;
 		boolean res = false;
-		for (TipoUser tu : FoundThat.tipoUsers) {
-			if (tu.getNome().equals(nome)) {
-				if (tu.isRegisto() == registo &&  tu.isReclamacao() == reclamacao && tu.isImportacao() == importacao && tu.isListagens() == listagens && tu.isDoacoes() ==  doacoes && tu.isConfiguracoes() == configuracoes) {
+
+		for (ModelStrategy t : FoundThat.tipoUsers) {
+		    TipoUser tu = ((TipoUser)t);
+			if (tu.getNome().equals(entity.getNome())) {
+				if (tu.isRegisto() == ent.isRegisto() &&  tu.isReclamacao() == ent.isReclamacao() && tu.isImportacao() == ent.isImportacao() && tu.isListagens() == ent.isListagens() && tu.isDoacoes() == ent.isDoacoes() && tu.isConfiguracoes() == ent.isConfiguracoes()) {
 					res = true;
 				}
 			}
 		}
-
 		return res;
 	}
 
-	public static boolean adicionarPerfil(String nome, Boolean registo, Boolean reclamacao, Boolean importacao, Boolean listagens, Boolean doacoes, Boolean configuracoes) {
+	//public boolean adicionarEntity(String nome, Boolean registo, Boolean reclamacao, Boolean importacao, Boolean listagens, Boolean doacoes, Boolean configuracoes) {
+	public boolean adicionarEntity(ModelStrategy entity) {
 		boolean res = false;
-		if (!isPerfilUser(nome)) {
-			TipoUser tu = new TipoUser(getLastCode(), nome, registo, reclamacao, importacao, listagens, doacoes, configuracoes);
-			FoundThat.tipoUsers.add(tu);
+		if (!isPerfilUser(entity.getNome())) {
+			entity.setCodigo(getLastCode());
+			FoundThat.tipoUsers.add(entity);
 			res = true;
 		} 
 		return res;	
 	}
 
-	public static boolean removerPerfil(String nome) {
+	public boolean removerEntity(String nome) {
 		boolean res = false;
-		if (isPerfilUser(nome) == true) {
+
+		if (isPerfilUser(nome)) {
 			for (int i = 0; i < FoundThat.tipoUsers.size(); i++) {
-				TipoUser us = FoundThat.tipoUsers.get(i);
+				TipoUser us = (TipoUser) FoundThat.tipoUsers.get(i);
 				if (us.getNome().equals(nome)) {
 					FoundThat.tipoUsers.remove(i);	
-				}	
+			        res = true;
+				}
 			}
-			res = false;	
 		}
-
 		return res;
 	}
 
-	public static boolean alterarPerfil(String nome, String nomeAntigo, Boolean registo, Boolean reclamacao, Boolean importacao, Boolean listagens, Boolean doacoes, Boolean configuracoes) {
+	public boolean alterarEntity(ModelStrategy tuNovo, ModelStrategy tuAntigo) {
 		boolean res = false;
-		if (!isPerfilUser(nome) || (isPerfilUser(nome) == true && isPerfil(nomeAntigo, registo, reclamacao, importacao, listagens, doacoes, configuracoes) == false)) {
-			for (int i = 0; i < FoundThat.tipoUsers.size(); i++) {
-				TipoUser tu = FoundThat.tipoUsers.get(i);
-				if (tu.getNome().equals(nomeAntigo)) {
-					tu.setNome(nome);
-					tu.setRegisto(registo);
-					tu.setReclamacao(reclamacao);
-					tu.setImportacao(importacao);
-					tu.setListagens(listagens);
-					tu.setDoacoes(doacoes);
-					tu.setConfiguracoes(configuracoes);
-				}			
-			}
-			res = true;
-		} 
 
+		if (!isPerfilUser(tuNovo.getNome()) || (isPerfilUser(tuNovo.getNome()) && !isEntity(tuAntigo))) {
+			for (int i = 0; i < FoundThat.tipoUsers.size(); i++) {
+				TipoUser tu = (TipoUser) FoundThat.tipoUsers.get(i);
+				if (tu.getNome().equals(tuAntigo.getNome())) {
+					tu.setNome(tuNovo.getNome());
+					tu.setRegisto(((TipoUser)tuNovo).isRegisto());
+					tu.setReclamacao(((TipoUser)tuNovo).isReclamacao());
+					tu.setImportacao(((TipoUser)tuNovo).isImportacao());
+					tu.setListagens(((TipoUser)tuNovo).isListagens());
+					tu.setDoacoes(((TipoUser)tuNovo).isDoacoes());
+					tu.setConfiguracoes(((TipoUser)tuNovo).isConfiguracoes());
+			        res = true;
+				}
+			}
+		}
 		return res;	
 	}
 
-	public static int getLastCode() {
+	public int getLastCode() {
 		if (FoundThat.tipoUsers.size() == 0) {
 			return 1;
 		}

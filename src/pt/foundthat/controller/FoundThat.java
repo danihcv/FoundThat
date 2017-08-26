@@ -9,25 +9,22 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Scanner;
 
-import pt.foundthat.model.Instituicao;
-import pt.foundthat.model.Registo;
-import pt.foundthat.model.Sala;
-import pt.foundthat.model.TipoObjeto;
-import pt.foundthat.model.TipoUser;
-import pt.foundthat.model.User;
+import pt.foundthat.model.*;
 import pt.foundthat.view.FrmImportacao;
 import pt.foundthat.view.FrmLogin;
 
 
 public class FoundThat {
-	//CRIAÇÃO DE ARRAYS PARA AS CLASSES
-	public static ArrayList<Registo> registos = new ArrayList<Registo>();
+	public static ManagerActionStrategy managerAction = null;
+	public static ManagerEntityStrategy managerEntity = null;
+	//CRIAï¿½ï¿½O DE ARRAYS PARA AS CLASSES
+	public static ArrayList<Registo> registos = new ArrayList<>();
 	public static ArrayList<Registo> doacoes = new ArrayList<Registo>();
 	public static ArrayList<Registo> importacoes;
-	public static ArrayList<Instituicao> instituicoes = new ArrayList<Instituicao>();
+	public static ArrayList<ModelStrategy> instituicoes = new ArrayList<>();
 	public static ArrayList<TipoObjeto> tipoObjetos = new ArrayList<TipoObjeto>();
-	public static ArrayList<Sala> salas = new ArrayList<Sala>();
-	public static ArrayList<TipoUser> tipoUsers = new ArrayList<TipoUser>();
+	public static ArrayList<ModelStrategy> salas = new ArrayList<>();
+	public static ArrayList<ModelStrategy> tipoUsers = new ArrayList<>();
 	public static ArrayList<User> users = new ArrayList<User>();
 	public static ArrayList<Registo> registoDoacoes = new ArrayList<Registo>();
 	//DATA SISTEMA
@@ -45,7 +42,7 @@ public class FoundThat {
 	static File registoFile = new File(registoFolder + "/" + dataRegistoNome + ".txt");
 	static File[] listaRegistos = registoFolder.listFiles();
 	static File instituicaoFile = new File("is.txt");
-	static File isFolder = new File("instituições");
+	static File isFolder = new File("instituiï¿½ï¿½es");
 	static File[] listaIS = isFolder.listFiles();
 	static File salasFile = new File("salas.txt");
 	static File objetosFile = new File("objetos.txt");
@@ -76,7 +73,7 @@ public class FoundThat {
 			Sala s = new Sala(dados[2]);
 			for (TipoObjeto to : FoundThat.tipoObjetos) {
 				if (to.getCodigo() == Integer.parseInt(dados[3])) {
-					Registo reg = new Registo(ManagerRegisto.getLastCode(), dados[0], dados[1], s, FoundThat.formatoDataRegisto.parse(data[0]), data[1], to, dados[4], dados[5], dados[6]);
+				    Registo reg = new Registo(ManagerRegisto.getLastCode(), dados[0], dados[1], s, FoundThat.formatoDataRegisto.parse(data[0]), data[1], to, dados[4], dados[5], dados[6]);
 					importacoes.add(reg);
 					registos.add(reg);
 				}
@@ -92,7 +89,7 @@ public class FoundThat {
 	//CARREGAR FICHEIRO
 	@SuppressWarnings("resource")
 	public static void carregarFicheiro() throws Exception {
-		//Verifica se ficheiro existe. Se não existe cria-o vazio.
+		//Verifica se ficheiro existe. Se nï¿½o existe cria-o vazio.
 		if (registoFolder.isDirectory() == false) {
 			registoFolder.mkdir();
 		}
@@ -138,10 +135,10 @@ public class FoundThat {
 			String line = inFile.nextLine();
 			String [] fields = line.split("#");
 			int tipo = Integer.parseInt(fields[2]);
-			for (TipoUser tu : tipoUsers)
+			for (ModelStrategy tu : tipoUsers)
 			{
 				if (tu.getCodigo() == tipo) {
-					User u = new User(fields[0], fields[1], tu);
+					User u = new User(fields[0], fields[1], (TipoUser) tu);
 					users.add(u);
 				}
 			}
@@ -156,7 +153,7 @@ public class FoundThat {
 			Instituicao is = new Instituicao(Integer.parseInt(fields[0]), fields[1].toLowerCase());
 			instituicoes.add(is);			
 			File instituicaoFile = new File(isFolder + "/" + is.getNome()+".txt");
-			if (instituicaoFile.isFile() == false) {
+			if (!instituicaoFile.isFile()) {
 				instituicaoFile.createNewFile();
 			}
 		}
@@ -168,9 +165,9 @@ public class FoundThat {
 			String [] fields = line.split("#");
 			//Adicionar codigo da instituicao(fields[2]) ao inteiro codigoIs e posteriormente associar ao TipoObjeto to 
 			int codigoIs = Integer.parseInt(fields[2]);
-			for (Instituicao is : instituicoes) {
+			for (ModelStrategy is : instituicoes) {
 				if (is.getCodigo() == codigoIs) {
-					TipoObjeto to = new TipoObjeto(Integer.parseInt(fields[0]), fields[1].toLowerCase(), is);
+					TipoObjeto to = new TipoObjeto(Integer.parseInt(fields[0]), fields[1].toLowerCase(), (Instituicao) is);
 					tipoObjetos.add(to);
 				}
 			}
@@ -180,7 +177,7 @@ public class FoundThat {
 		//Ler ficheiro de salas e gravar em array 
 		inFile = new Scanner(salasFile);
 		while (inFile.hasNextLine()) {
-			String line = inFile.nextLine();
+            String line = inFile.nextLine();
 			Sala s = new Sala(line);
 			salas.add(s);
 		}
@@ -191,10 +188,10 @@ public class FoundThat {
 			String line = inFile.nextLine();
 			String[] fields = line.split("#");
 			Sala tempSala = null;
-			for (Sala s : salas)
+			for (ModelStrategy s : salas)
 			{
 				if (s.getNome().equals(fields[3])) {
-					tempSala = s;					
+					tempSala = (Sala) s;
 				}
 			}
 
@@ -204,7 +201,7 @@ public class FoundThat {
 
 			for (TipoObjeto to : tipoObjetos) {
 				if (to.getCodigo() == codigoObjeto) {
-					Registo rec = new Registo(Integer.parseInt(fields[0]),fields[1], fields[2], tempSala, FoundThat.formatoDataRegisto.parse(fields[4]), fields[5], to, fields[7].toLowerCase(), fields[8].toLowerCase(), fields[9]);
+					Registo rec = new Registo(Integer.parseInt(fields[0]), fields[1], fields[2], tempSala, FoundThat.formatoDataRegisto.parse(fields[4]), fields[5], to, fields[7].toLowerCase(), fields[8].toLowerCase(), fields[9]);
 					doacoes.add(rec);
 				}
 			}
@@ -215,20 +212,19 @@ public class FoundThat {
 
 		//Ler ficheiro de registos e gravar em array 
 		for (int i = 0; i < listaRegistos.length; i++) {
-
-			if (listaRegistos[i].isFile()) {
-
-				File registosFile = new File(registoFolder + "/" + listaRegistos[i].getName());
+            if (listaRegistos[i].isFile()) {
+                File registosFile = new File(registoFolder + "/" + listaRegistos[i].getName());
 
 				inFile = new Scanner(registosFile);	
 				while (inFile.hasNextLine()) {
 					String line = inFile.nextLine();
 					String[] fields = line.split("#");
 					Sala tempSala = null;
-					for (Sala s : salas)
+                    System.out.println(fields[3]);
+                    for (ModelStrategy s : salas)
 					{
 						if (s.getNome().equals(fields[3])) {
-							tempSala = s;					
+							tempSala = (Sala) s;
 						}
 					}
 
@@ -256,8 +252,8 @@ public class FoundThat {
 
 		//TipoUsers
 		out = new PrintWriter(tipoUsersFile);
-		for (TipoUser tu : tipoUsers) {
-			out.println(tu.getCodigo() + "#" + tu.getNome() + "#" + tu.isRegisto() + "#" + tu.isReclamacao() + "#" + tu.isImportacao() + "#" + tu.isListagens() + "#" + tu.isDoacoes() + "#" + tu.isConfiguracoes());
+		for (ModelStrategy tu : tipoUsers) {
+			out.println(tu.getCodigo() + "#" + tu.getNome() + "#" + ((TipoUser)tu).isRegisto() + "#" + ((TipoUser)tu).isReclamacao() + "#" + ((TipoUser)tu).isImportacao() + "#" + ((TipoUser)tu).isListagens() + "#" + ((TipoUser)tu).isDoacoes() + "#" + ((TipoUser)tu).isConfiguracoes());
 		}
 		out.close();
 
@@ -268,12 +264,12 @@ public class FoundThat {
 		}
 		out.close();
 
-		//Instituições
+		//Instituiï¿½ï¿½es
 		out = new PrintWriter (instituicaoFile);
 		@SuppressWarnings("unused")
 		PrintWriter out2;
 
-		for (Instituicao is : instituicoes) {
+		for (ModelStrategy is : instituicoes) {
 			out.println(is.getCodigo() + "#" + is.getNome().toLowerCase());
 		}
 		out.close();
@@ -289,7 +285,7 @@ public class FoundThat {
 
 		//Salas
 		out = new PrintWriter(salasFile);
-		for (Sala s : salas) {
+		for (ModelStrategy s : salas) {
 			out.println(s.getNome().toUpperCase());
 		}
 		out.close();
@@ -313,7 +309,7 @@ public class FoundThat {
 		}
 	}
 
-	//VERIFICAR SE É NÚMERO (UTILIZADO NA FRMREGISTO, NO CAMPO NOME)
+	//VERIFICAR SE ï¿½ Nï¿½MERO (UTILIZADO NA FRMREGISTO, NO CAMPO NOME)
 	public static boolean isNumber(String str) {
 		boolean res = false;;
 		char[] ch = str.toCharArray();
@@ -367,7 +363,7 @@ public class FoundThat {
 
 	public static boolean checkPerfil(String instituicao) {
 		res = false;
-		for (Instituicao is : instituicoes) {
+		for (ModelStrategy is : instituicoes) {
 			if (instituicao.equals(is.getNome())) {
 				res = true;
 			}

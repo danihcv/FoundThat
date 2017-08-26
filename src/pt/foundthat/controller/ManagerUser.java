@@ -1,10 +1,10 @@
 package pt.foundthat.controller;
 
+import pt.foundthat.model.ModelStrategy;
 import pt.foundthat.model.TipoUser;
 import pt.foundthat.model.User;
 
 public class ManagerUser {
-
 
 	public static boolean isUser(String username, String password) {
 		boolean res = false;
@@ -12,21 +12,16 @@ public class ManagerUser {
 			if (u.getUser().equals(username) && u.getPassword().equals(password)) {
 				res = true;
 			}
-
 		}
-
 		return res;
-
 	}
 
 	public static boolean isUserExiste(String username) {
-
 		boolean res = false;
 		for (User u : FoundThat.users) {
 			if (u.getUser().equals(username)) {
 				res = true;
 			}
-
 		}
 
 		return res;
@@ -49,9 +44,9 @@ public class ManagerUser {
 	public static boolean adicionarUser(String username, String password, String perfil) {
 		boolean res = false;
 		if (!isUserExiste(username)) {
-			for (TipoUser tu : FoundThat.tipoUsers) {
+			for (ModelStrategy tu : FoundThat.tipoUsers) {
 				if (tu.getNome().equals(perfil)) {
-					User user = new User(username, password, tu);
+					User user = new User(username, password, (TipoUser) tu);
 					FoundThat.users.add(user);
 					res = true;
 				} 	
@@ -62,7 +57,7 @@ public class ManagerUser {
 	}
 	public static boolean removerUser(String username) {
 		boolean res = false;
-		if (isUserExiste(username) == true) {
+		if (isUserExiste(username)) {
 			for (int i = 0; i < FoundThat.users.size(); i++) {
 				User us = FoundThat.users.get(i);
 				if (us.getUser().equals(username)) {
@@ -83,10 +78,10 @@ public class ManagerUser {
 			for (int i = 0; i < FoundThat.users.size(); i++) {
 				User us = FoundThat.users.get(i);
 				if (us.getUser().equals(userAntigo)) {
-					for (TipoUser tu : FoundThat.tipoUsers) {
+					for (ModelStrategy tu : FoundThat.tipoUsers) {
 						if (tu.getNome().equals(perfil)) {
 							us.setUser(user);
-							us.setTipo(tu);
+							us.setTipo((TipoUser) tu);
 							us.setPassword(password);
 						}
 					}

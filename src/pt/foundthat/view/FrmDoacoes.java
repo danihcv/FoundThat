@@ -59,18 +59,19 @@ public class FrmDoacoes extends JFrame {
 	 */
 	public FrmDoacoes() throws Exception {
 		setResizable(false);
+		FoundThat.managerAction = new ManagerDoacao();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FrmDoacoes.class.getResource("/pt/foundthat/resources/lupa.png")));
 		setTitle("Doa\u00E7\u00F5es - FoundThat");
-		//OPCOES MESSAGEBOX(SIM/NÃO)
+		//OPCOES MESSAGEBOX(SIM/Nï¿½O)
 		String[] opcoes = new String[2];
 		opcoes[0] = new String("Sim");
-		opcoes[1] = new String("Não");
+		opcoes[1] = new String("Nï¿½o");
 		setBounds(100, 100, 450, 300);
 		this.setLocationRelativeTo(null);
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicação?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
+				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicaï¿½ï¿½o?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 				if (selectedOption == JOptionPane.YES_OPTION) {
 					try {
 						FoundThat.gravarFicheiro();
@@ -104,19 +105,19 @@ public class FrmDoacoes extends JFrame {
 			dataTemp = FoundThat.formatoDataRegisto.format(FoundThat.registos.get(i).getData());
 			temp = FoundThat.formatoDataRegisto.parse(dataTemp);
 			temp.setTime(temp.getTime() + 30L * 24 * 60 * 60 * 1000);
-			if ((temp.before(sistema)) && ((FoundThat.registos.get(i).getEstado().equals("razoável")) || (FoundThat.registos.get(i).getEstado().equals("bom")))) {
+			if ((temp.before(sistema)) && ((FoundThat.registos.get(i).getEstado().equals("razoï¿½vel")) || (FoundThat.registos.get(i).getEstado().equals("bom")))) {
 				cont++;
 			}
 		}
 
-		String[] nomeColunas = {"Código", "Data", "Objeto", "Descrição", "Instituição"};
+		String[] nomeColunas = {"Cï¿½digo", "Data", "Objeto", "Descriï¿½ï¿½o", "Instituiï¿½ï¿½o"};
 		int c = 0;
 		String[][] regs = new String[cont][5];
-		for (int i = 0; i < FoundThat.registos.size(); i++) {
-			dataTemp = FoundThat.formatoDataRegisto.format(FoundThat.registos.get(i).getData());
+        for (int i = 0; i < FoundThat.registos.size(); i++) {
+            dataTemp = FoundThat.formatoDataRegisto.format(FoundThat.registos.get(i).getData());
 			temp = FoundThat.formatoDataRegisto.parse(dataTemp);
 			temp.setTime(temp.getTime() + 30L * 24 * 60 * 60 * 1000);
-			if ((temp.before(sistema)) && ((FoundThat.registos.get(i).getEstado().equals("razoável")) || (FoundThat.registos.get(i).getEstado().equals("bom")))) {
+			if ((temp.before(sistema)) && ((FoundThat.registos.get(i).getEstado().equals("razoï¿½vel")) || (FoundThat.registos.get(i).getEstado().equals("bom")))) {
 				regs[c][0] = Integer.toString(FoundThat.registos.get(i).getCodigo());
 				regs[c][1] = FoundThat.formatoDataRegisto.format(FoundThat.registos.get(i).getData());
 				regs[c][2] = FoundThat.registos.get(i).getObjeto().getNome().substring(0, 1).toUpperCase() + FoundThat.registos.get(i).getObjeto().getNome().substring(1).toLowerCase();
@@ -155,7 +156,7 @@ public class FrmDoacoes extends JFrame {
 		contentPane.add(scrollPane);
 
 
-		//BOTÃO +INFO
+		//BOTï¿½O +INFO
 		btnInfo = new JButton("+Info");
 		btnInfo.setBorder(null);
 		btnInfo.addMouseListener(new MouseAdapter() {
@@ -183,7 +184,7 @@ public class FrmDoacoes extends JFrame {
 							"\n" + "Hora: " + FoundThat.registos.get(cod).getHora() + "\n" + "Tipo de objeto: " + FoundThat.registos.get(cod).getObjeto().getNome().substring(0, 1).toUpperCase() + 
 							FoundThat.registos.get(cod).getObjeto().getNome().substring(1).toLowerCase() + "\n" + "Cor: " + FoundThat.registos.get(cod).getCor().substring(0, 1).toUpperCase() +  
 							FoundThat.registos.get(cod).getCor().substring(1).toLowerCase() + "\n" + "Estado: " + FoundThat.registos.get(cod).getEstado().substring(0, 1).toUpperCase() + 
-							FoundThat.registos.get(cod).getEstado().substring(1).toLowerCase() + "\n" + "Descrição: " + FoundThat.registos.get(cod).getDescricao() ;
+							FoundThat.registos.get(cod).getEstado().substring(1).toLowerCase() + "\n" + "Descriï¿½ï¿½o: " + FoundThat.registos.get(cod).getDescricao() ;
 					JOptionPane.showMessageDialog(null, info, "FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 			}
@@ -191,7 +192,7 @@ public class FrmDoacoes extends JFrame {
 		btnInfo.setBounds(165, 155, 106, 23);
 		contentPane.add(btnInfo);
 
-		//BOTÃO SAIR
+		//BOTï¿½O SAIR
 		JButton btnSair = new JButton("Sair");
 		btnSair.setBorder(null);
 		btnSair.addMouseListener(new MouseAdapter() {
@@ -222,7 +223,7 @@ public class FrmDoacoes extends JFrame {
 		btnSair.setBounds(286, 155, 106, 23);
 		contentPane.add(btnSair);
 
-		//BOTÃO DOAR
+		//BOTï¿½O DOAR
 		JButton btnDoar = new JButton("Doar");
 		btnDoar.setBorder(null);
 		btnDoar.addMouseListener(new MouseAdapter() {
@@ -245,7 +246,7 @@ public class FrmDoacoes extends JFrame {
 				}
 				else {
 					int cod = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
-					if (ManagerDoacao.doarObjeto(cod) == true) {
+					if (FoundThat.managerAction.execute(cod) != -1) {
 						try {
 							FoundThat.gravarFicheiro();
 							FoundThat.gravarDoacoes();

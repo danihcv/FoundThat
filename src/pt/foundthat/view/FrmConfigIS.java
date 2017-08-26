@@ -28,6 +28,7 @@ import javax.swing.border.EmptyBorder;
 import pt.foundthat.controller.FoundThat;
 import pt.foundthat.controller.ManagerIS;
 import pt.foundthat.model.Instituicao;
+import pt.foundthat.model.ModelStrategy;
 
 public class FrmConfigIS extends JFrame {
 
@@ -60,18 +61,19 @@ public class FrmConfigIS extends JFrame {
 	 */
 	public FrmConfigIS() {
 		setResizable(false);
-		//OPCOES MESSAGEBOX(SIM/NÃO)
+		FoundThat.managerEntity = new ManagerIS();
+		//OPCOES MESSAGEBOX(SIM/Nï¿½O)
 		String[] opcoes = new String[2];
 		opcoes[0] = new String("Sim");
-		opcoes[1] = new String("Não");
+		opcoes[1] = new String("Nï¿½o");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FrmConfigSala.class.getResource("/pt/foundthat/resources/lupa.png")));
-		setTitle("Gest\u00E3o de Instituições - FoundThat");
+		setTitle("Gest\u00E3o de Instituiï¿½ï¿½es - FoundThat");
 		setBounds(100, 100, 462, 300);
 		this.setLocationRelativeTo(null);
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicação?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
+				int selectedOption = JOptionPane.showOptionDialog(null, "Deseja sair da aplicaï¿½ï¿½o?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 				if (selectedOption == JOptionPane.YES_OPTION) {
 					try {
 						FoundThat.gravarFicheiro();
@@ -101,7 +103,7 @@ public class FrmConfigIS extends JFrame {
 		contentPane.add(txtIS);
 		txtIS.setColumns(10);
 
-		//LISTA COM INSTITUIÇÕES
+		//LISTA COM INSTITUIï¿½ï¿½ES
 		dlm = new DefaultListModel<String>();
 		refresh();
 		@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -122,7 +124,7 @@ public class FrmConfigIS extends JFrame {
 		listScroller.setBounds(58, 37, 118, 228);
 		contentPane.add(listScroller);
 
-		//ADICIONAR INSTITUIÇÃO
+		//ADICIONAR INSTITUIï¿½ï¿½O
 		JButton btnAdicionar = new JButton("Adicionar");
 		btnAdicionar.setBorder(null);
 		btnAdicionar.addMouseListener(new MouseAdapter() {
@@ -138,11 +140,12 @@ public class FrmConfigIS extends JFrame {
 		btnAdicionar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (txtIS.getText().equals("")) {
-					JOptionPane.showMessageDialog(null, "Introduza uma instituição!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+					JOptionPane.showMessageDialog(null, "Introduza uma instituiï¿½ï¿½o!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else {
-					if (ManagerIS.adicionarIS(txtIS.getText().toLowerCase()) == false) {
-						JOptionPane.showMessageDialog(null, "A instituição " + txtIS.getText().substring(0, 1).toUpperCase() + txtIS.getText().substring(1).toLowerCase() + " já existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+					ModelStrategy is = new Instituicao(-1, txtIS.getText().toLowerCase());
+					if (!FoundThat.managerEntity.adicionarEntity(is)) {
+						JOptionPane.showMessageDialog(null, "A instituiï¿½ï¿½o " + txtIS.getText().substring(0, 1).toUpperCase() + txtIS.getText().substring(1).toLowerCase() + " jï¿½ existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 					}
 					else {
 						try {
@@ -151,7 +154,7 @@ public class FrmConfigIS extends JFrame {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-						JOptionPane.showMessageDialog(null, "A instituição " + txtIS.getText().substring(0, 1).toUpperCase() + txtIS.getText().substring(1).toLowerCase() + " foi adicionada!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;	
+						JOptionPane.showMessageDialog(null, "A instituiï¿½ï¿½o " + txtIS.getText().substring(0, 1).toUpperCase() + txtIS.getText().substring(1).toLowerCase() + " foi adicionada!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;	
 						refresh();
 					}
 				}
@@ -163,7 +166,7 @@ public class FrmConfigIS extends JFrame {
 		btnAdicionar.setBounds(295, 110, 106, 23);
 		contentPane.add(btnAdicionar);
 
-		//ALTERAR INSTITUIÇÃO
+		//ALTERAR INSTITUIï¿½ï¿½O
 		JButton btnAlterar = new JButton("Alterar");
 		btnAlterar.setBorder(null);
 		btnAlterar.addMouseListener(new MouseAdapter() {
@@ -180,20 +183,22 @@ public class FrmConfigIS extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (list.getSelectedIndex() != -1) {
 					if (list.getSelectedValue().equals(txtIS.getText().toUpperCase())) {
-						JOptionPane.showMessageDialog(null, "A instituição " + txtIS.getText().toUpperCase() + " já existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+						JOptionPane.showMessageDialog(null, "A instituiï¿½ï¿½o " + txtIS.getText().toUpperCase() + " jï¿½ existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 					}
 					else if (txtIS.getText().equals("")) {
-						JOptionPane.showMessageDialog(null, "Introduza uma instituição!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+						JOptionPane.showMessageDialog(null, "Introduza uma instituiï¿½ï¿½o!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 					}
 					else {
-						int selectedOption = JOptionPane.showOptionDialog(null, "Deseja alterar a instituição " + list.getSelectedValue().toString() + " pela instituição " + txtIS.getText() + "?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
+						int selectedOption = JOptionPane.showOptionDialog(null, "Deseja alterar a instituiï¿½ï¿½o " + list.getSelectedValue().toString() + " pela instituiï¿½ï¿½o " + txtIS.getText() + "?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 						if (selectedOption == JOptionPane.YES_OPTION) {
-							if (ManagerIS.alterarIS(txtIS.getText().toLowerCase(), list.getSelectedValue().toString().toLowerCase()) == true) {
-								JOptionPane.showMessageDialog(null, "A instituição foi alterada!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+						    ModelStrategy isNova = new Instituicao(-1, txtIS.getText().toLowerCase());
+						    ModelStrategy isAntiga = new Instituicao(-1, list.getSelectedValue().toString().toLowerCase());
+							if (((ManagerIS)FoundThat.managerEntity).alterarEntity(isNova, isAntiga)) {
+								JOptionPane.showMessageDialog(null, "A instituiï¿½ï¿½o foi alterada!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 								refresh();
 							}
 							else {
-								JOptionPane.showMessageDialog(null, "A instituição " + txtIS.getText().substring(0, 1).toUpperCase() + txtIS.getText().substring(1).toLowerCase() + " já existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+								JOptionPane.showMessageDialog(null, "A instituiï¿½ï¿½o " + txtIS.getText().substring(0, 1).toUpperCase() + txtIS.getText().substring(1).toLowerCase() + " jï¿½ existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 							}
 
 						}
@@ -201,7 +206,7 @@ public class FrmConfigIS extends JFrame {
 
 				}
 				else {
-					JOptionPane.showMessageDialog(null, "Selecione uma instituição!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+					JOptionPane.showMessageDialog(null, "Selecione uma instituiï¿½ï¿½o!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 			}
 		});
@@ -211,7 +216,7 @@ public class FrmConfigIS extends JFrame {
 		btnAlterar.setBounds(295, 144, 106, 23);
 		contentPane.add(btnAlterar);
 
-		//REMOVER INSTITUIÇÃO
+		//REMOVER INSTITUIï¿½ï¿½O
 		JButton btnRemover = new JButton("Remover");
 		btnRemover.setBorder(null);
 		btnRemover.addMouseListener(new MouseAdapter() {
@@ -227,22 +232,22 @@ public class FrmConfigIS extends JFrame {
 		btnRemover.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (list.getSelectedIndex() != -1) {
-					int selectedOption = JOptionPane.showOptionDialog(null, "Deseja remover a instituição " + list.getSelectedValue().toString().substring(0, 1).toUpperCase() + list.getSelectedValue().toString().substring(1).toLowerCase() + "?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
+					int selectedOption = JOptionPane.showOptionDialog(null, "Deseja remover a instituiï¿½ï¿½o " + list.getSelectedValue().toString().substring(0, 1).toUpperCase() + list.getSelectedValue().toString().substring(1).toLowerCase() + "?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 					if (selectedOption == JOptionPane.YES_OPTION) {
 						String isRemovida = list.getSelectedValue().toString().substring(0, 1).toUpperCase() + list.getSelectedValue().toString().substring(1).toLowerCase();
-						if (!ManagerIS.isAtribuida(list.getSelectedValue().toString().toLowerCase())) {
-							if (ManagerIS.removerIS(list.getSelectedValue().toString().toLowerCase()) == false) {
-								JOptionPane.showMessageDialog(null, "A instituição " + isRemovida + " foi removida!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+						if (!((ManagerIS)FoundThat.managerEntity).isAtribuida(list.getSelectedValue().toString().toLowerCase())) {
+							if (FoundThat.managerEntity.removerEntity(list.getSelectedValue().toString().toLowerCase())) {
+								JOptionPane.showMessageDialog(null, "A instituiï¿½ï¿½o " + isRemovida + " foi removida!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);
 								refresh();
 							}
 						}
 						else {
-							JOptionPane.showMessageDialog(null, "A instituição " + isRemovida + " tem objetos associados, elimine esses objetos primeiro!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+							JOptionPane.showMessageDialog(null, "A instituiï¿½ï¿½o " + isRemovida + " tem objetos associados, elimine esses objetos primeiro!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 						}
 					}
 				}
 				else {
-					JOptionPane.showMessageDialog(null, "Selecione uma instituição!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
+					JOptionPane.showMessageDialog(null, "Selecione uma instituiï¿½ï¿½o!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 			}
 		});
@@ -298,8 +303,11 @@ public class FrmConfigIS extends JFrame {
 	}
 
 	public static void refresh() {
-		//CÓPIA DO ARRAY ORIGINAL DE INSTITUICOES, PARA ORDENÁ-LO NA LIST!
-		ArrayList <Instituicao> instituicoesOrdenado = new ArrayList<Instituicao>(FoundThat.instituicoes);
+		//Cï¿½PIA DO ARRAY ORIGINAL DE INSTITUICOES, PARA ORDENï¿½-LO NA LIST!
+		ArrayList <Instituicao> instituicoesOrdenado = new ArrayList<>();
+		for(ModelStrategy is : FoundThat.instituicoes) {
+		    instituicoesOrdenado.add((Instituicao) is);
+        }
 		Collections.sort(instituicoesOrdenado);
 		dlm.clear();
 		for (Instituicao is : instituicoesOrdenado) {

@@ -1,61 +1,65 @@
 package pt.foundthat.controller;
 
 import pt.foundthat.model.Instituicao;
+import pt.foundthat.model.ModelStrategy;
+import pt.foundthat.model.Sala;
 import pt.foundthat.model.TipoObjeto;
 
-public class ManagerTipoObjeto {
+public class ManagerTipoObjeto extends ManagerEntityStrategy {
 
-	public static boolean isTipoObjeto(String nome) {
-		boolean res = false;
-		for (TipoObjeto to : FoundThat.tipoObjetos) {
-			if (to.getNome().equals(nome)) {
-				res = true;
-			}
-
-		}
-
-		return res;	
+	public boolean isEntity(String nome) {
+		this.entityList.addAll(FoundThat.tipoObjetos);
+		boolean res = super.isEntity(nome);
+		this.entityList.clear();
+		return res;
 	}
 
-	public static boolean adicionarTipoObjeto(String nome, String nomeIS) {
+	public boolean alterarEntity(String novaEntity, String antigaEntity) {
+		return false;
+	}
+
+	public boolean adicionarEntity(ModelStrategy entity) {
 		boolean res = false;
-		if (!isTipoObjeto(nome)) {
-			for (Instituicao is : FoundThat.instituicoes) {
-				if (is.getNome().equals(nomeIS)) {
-					TipoObjeto to = new TipoObjeto(getLastCode(), nome, is);
+		String isNome = ((TipoObjeto)entity).getCodigoIS().getNome();
+		if (!isEntity(entity.getNome())) {
+			for (ModelStrategy is : FoundThat.instituicoes) {
+				if (is.getNome().equals(isNome)) {
+					TipoObjeto to = new TipoObjeto(getLastCode(), entity.getNome(), (Instituicao) is);
 					FoundThat.tipoObjetos.add(to);
 					res = true;
-				} 	
+				}
 			}
 		}
 		return res;	
 	}
 
-	public static boolean removerTipoObjeto(String nome) {
+	public boolean removerEntity(String nome) {
 		boolean res = false;
-		if (isTipoObjeto(nome) == true) {
+
+		if (isEntity(nome)) {
 			for (int i = 0; i < FoundThat.tipoObjetos.size(); i++) {
 				TipoObjeto to = FoundThat.tipoObjetos.get(i);
 				if (to.getNome().equals(nome)) {
 					FoundThat.tipoObjetos.remove(i);	
-				}	
+			        res = true;
+				}
 			}
-			res = false;	
 		}
-
 		return res;
 	}
 
-	public static boolean alterarTipoObjeto(String novoObjeto, String objetoAntigo, String novaIS, String isAntiga) {
+	public boolean alterarEntity(ModelStrategy novoObjeto, ModelStrategy objetoAntigo) {
 		boolean res = false;
-		if (!isTipoObjeto(novoObjeto)) {
+		String isNova = ((TipoObjeto)novoObjeto).getCodigoIS().getNome();
+		String isAntiga = ((TipoObjeto)objetoAntigo).getCodigoIS().getNome();
+		if (!isEntity(novoObjeto.getNome())) {
 			for (int i = 0; i < FoundThat.tipoObjetos.size(); i++) {
 				TipoObjeto to = FoundThat.tipoObjetos.get(i);
-				if (to.getNome().equals(objetoAntigo)) {
-					for (Instituicao is : FoundThat.instituicoes) {
-						if (is.getNome().equals(novaIS)) {
-							to.setNome(novoObjeto);
-							to.setCodigoIS(is);
+				if (to.getNome().equals(objetoAntigo.getNome())) {
+					for (ModelStrategy is : FoundThat.instituicoes) {
+						if (is.getNome().equals(isNova)) {
+							to.setNome(novoObjeto.getNome());
+							to.setCodigoIS((Instituicao) is);
 						}
 					}
 
@@ -64,32 +68,24 @@ public class ManagerTipoObjeto {
 			res = true;
 		} 
 		else {
-			for (Instituicao is : FoundThat.instituicoes) {
-				if (novaIS.equals(isAntiga)) {
+			for (ModelStrategy is : FoundThat.instituicoes) {
+				if (isNova.equals(isAntiga)) {
 					res = false;
 				}
 				else {
 					for (int i = 0; i < FoundThat.tipoObjetos.size(); i++) {
 						TipoObjeto to = FoundThat.tipoObjetos.get(i);
-						if (to.getNome().equals(objetoAntigo)) {
-							if (is.getNome().equals(novaIS)) {
-								to.setNome(novoObjeto);
-								to.setCodigoIS(is);
+						if (to.getNome().equals(objetoAntigo.getNome())) {
+							if (is.getNome().equals(isNova)) {
+								to.setNome(novoObjeto.getNome());
+								to.setCodigoIS((Instituicao) is);
 							}
-
-
 						}			
 					}
 					res = true;
 				}
 			}
-
 		}
 		return res;	
 	}
-
-	public static int getLastCode() {
-		return FoundThat.tipoObjetos.get(FoundThat.tipoObjetos.size() - 1).getCodigo()+1;
-	}
-
 }
