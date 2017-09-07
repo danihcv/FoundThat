@@ -22,7 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import pt.foundthat.controller.FoundThat;
-import pt.foundthat.model.ModelStrategy;
+import pt.foundthat.model.ModelPrototype;
 import pt.foundthat.model.TipoUser;
 import pt.foundthat.model.User;
 
@@ -530,7 +530,7 @@ public class FrmMain extends JFrame {
 	public static  void checkUser() {
 		for (User us : FoundThat.users) {
 			if (FrmLogin.txtUser.getText().equals(us.getUser())) {
-				for (ModelStrategy t : FoundThat.tipoUsers) {
+				for (ModelPrototype t : FoundThat.tipoUsers) {
 					TipoUser tu = (TipoUser) t;
 					if (us.getTipo().getCodigo() == tu.getCodigo()) {
 						menuRegisto.setVisible(tu.isRegisto());

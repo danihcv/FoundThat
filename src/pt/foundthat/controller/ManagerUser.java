@@ -1,6 +1,6 @@
 package pt.foundthat.controller;
 
-import pt.foundthat.model.ModelStrategy;
+import pt.foundthat.model.ModelPrototype;
 import pt.foundthat.model.TipoUser;
 import pt.foundthat.model.User;
 
@@ -44,7 +44,7 @@ public class ManagerUser {
 	public static boolean adicionarUser(String username, String password, String perfil) {
 		boolean res = false;
 		if (!isUserExiste(username)) {
-			for (ModelStrategy tu : FoundThat.tipoUsers) {
+			for (ModelPrototype tu : FoundThat.tipoUsers) {
 				if (tu.getNome().equals(perfil)) {
 					User user = new User(username, password, (TipoUser) tu);
 					FoundThat.users.add(user);
@@ -78,7 +78,7 @@ public class ManagerUser {
 			for (int i = 0; i < FoundThat.users.size(); i++) {
 				User us = FoundThat.users.get(i);
 				if (us.getUser().equals(userAntigo)) {
-					for (ModelStrategy tu : FoundThat.tipoUsers) {
+					for (ModelPrototype tu : FoundThat.tipoUsers) {
 						if (tu.getNome().equals(perfil)) {
 							us.setUser(user);
 							us.setTipo((TipoUser) tu);

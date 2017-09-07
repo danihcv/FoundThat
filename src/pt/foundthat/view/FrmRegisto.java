@@ -25,8 +25,7 @@ import javax.swing.border.LineBorder;
 
 import pt.foundthat.controller.FoundThat;
 import pt.foundthat.controller.ManagerRegisto;
-import pt.foundthat.model.ModelStrategy;
-import pt.foundthat.model.Sala;
+import pt.foundthat.model.ModelPrototype;
 import pt.foundthat.model.TipoObjeto;
 
 
@@ -170,7 +169,7 @@ public class FrmRegisto extends JFrame {
 		cmbSala.setForeground(new Color(25, 25, 112));
 		cmbSala.setBackground(new Color(220, 220, 220));
 
-		for (ModelStrategy s : FoundThat.salas) {
+		for (ModelPrototype s : FoundThat.salas) {
 			cmbSala.addItem(s);
 		}
 		cmbSala.setSelectedIndex(-1);

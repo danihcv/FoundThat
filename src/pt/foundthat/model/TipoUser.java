@@ -1,7 +1,6 @@
 package pt.foundthat.model;
 
-public class TipoUser extends ModelStrategy implements Comparable <TipoUser>{
-
+public class TipoUser extends ModelPrototype implements Comparable <TipoUser>{
 	private boolean registo;
 	private boolean reclamacao;
 	private boolean importacao;
@@ -9,17 +8,26 @@ public class TipoUser extends ModelStrategy implements Comparable <TipoUser>{
 	private boolean doacoes;
 	private boolean configuracoes;
 
-	public TipoUser(int codigo, String nome, boolean registo, boolean reclamacao,
-			boolean importacao, boolean listagens, boolean doacoes,
-			boolean configuracoes) {
-		this.codigo = codigo;
-		this.nome = nome;
-		this.registo = registo;
-		this.reclamacao = reclamacao;
-		this.importacao = importacao;
-		this.listagens = listagens;
-		this.doacoes = doacoes;
-		this.configuracoes = configuracoes;
+	public TipoUser() {
+		this.codigo = -1;
+		this.nome = "Novo Tipo Usuario";
+		this.registo = false;
+		this.reclamacao = false;
+		this.importacao = false;
+		this.listagens = false;
+		this.doacoes = false;
+		this.configuracoes = false;
+	}
+
+	TipoUser(TipoUser tipoUser) {
+		this.codigo = tipoUser.getCodigo();
+		this.nome = tipoUser.getNome();
+		this.registo = tipoUser.isRegisto();
+		this.reclamacao = tipoUser.isReclamacao();
+		this.importacao = tipoUser.isImportacao();
+		this.listagens = tipoUser.isListagens();
+		this.doacoes = false;
+		this.configuracoes = false;
 	}
 
 	public boolean isRegisto() {
@@ -72,6 +80,11 @@ public class TipoUser extends ModelStrategy implements Comparable <TipoUser>{
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	@Override
+	public ModelPrototype clone() {
+		return new TipoUser(this);
 	}
 
 	@Override

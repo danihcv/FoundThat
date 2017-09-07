@@ -28,8 +28,7 @@ import javax.swing.border.LineBorder;
 
 import pt.foundthat.controller.FoundThat;
 import pt.foundthat.controller.ManagerSala;
-import pt.foundthat.model.Instituicao;
-import pt.foundthat.model.ModelStrategy;
+import pt.foundthat.model.ModelPrototype;
 import pt.foundthat.model.Sala;
 
 public class FrmConfigSala extends JFrame {
@@ -159,7 +158,8 @@ public class FrmConfigSala extends JFrame {
 					JOptionPane.showMessageDialog(null, "Introduza uma sala!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else {
-					ModelStrategy s = new Sala(txtSala.getText().toUpperCase());
+					ModelPrototype s = FoundThat.prototypeSala.clone();
+					s.setNome(txtSala.getText().toUpperCase());
 					if (!FoundThat.managerEntity.adicionarEntity(s)) {
 						JOptionPane.showMessageDialog(null, "A sala " + txtSala.getText().toUpperCase() + " j� existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;				
 					}
@@ -201,8 +201,10 @@ public class FrmConfigSala extends JFrame {
 					else {
 						int selectedOption = JOptionPane.showOptionDialog(null, "Deseja alterar a sala " + list.getSelectedValue().toString() + " pela sala " + txtSala.getText() + "?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 						if (selectedOption == JOptionPane.YES_OPTION) {
-						    ModelStrategy sAntiga = new Sala(list.getSelectedValue().toString());
-						    ModelStrategy sNova = new Sala(txtSala.getText().toUpperCase());
+						    Sala sAntiga = (Sala) FoundThat.prototypeSala.clone();
+						    sAntiga.setNome(list.getSelectedValue().toString());
+						    Sala sNova = (Sala) FoundThat.prototypeSala.clone();
+						    sNova.setNome(txtSala.getText().toUpperCase());
 
 							if (FoundThat.managerEntity.alterarEntity(sNova, sAntiga)) {
 								JOptionPane.showMessageDialog(null, "A sala foi alterada!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
@@ -315,7 +317,7 @@ public class FrmConfigSala extends JFrame {
 
 	public static void refresh() {
         ArrayList<Sala> salasOrdenado = new ArrayList<>();
-        for (ModelStrategy sala : FoundThat.salas) {
+        for (ModelPrototype sala : FoundThat.salas) {
             salasOrdenado.add((Sala) sala);
         }
 		Collections.sort(salasOrdenado);

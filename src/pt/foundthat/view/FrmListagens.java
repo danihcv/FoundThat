@@ -33,9 +33,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import pt.foundthat.controller.FoundThat;
-import pt.foundthat.model.ModelStrategy;
+import pt.foundthat.model.ModelPrototype;
 import pt.foundthat.model.Registo;
-import pt.foundthat.model.Sala;
 import pt.foundthat.model.TipoObjeto;
 
 public class FrmListagens extends JFrame {
@@ -133,7 +132,7 @@ public class FrmListagens extends JFrame {
 		cmbSala.setForeground(new Color(25, 25, 112));
 		cmbSala.setBackground(new Color(220, 220, 220));
 
-		for (ModelStrategy s : FoundThat.salas) {
+		for (ModelPrototype s : FoundThat.salas) {
 			cmbSala.addItem(s);
 		}
 
@@ -397,12 +396,19 @@ public class FrmListagens extends JFrame {
 				}
 				else {
 					int cod = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString()) - 1;
-					String info = "Nome: " + FoundThat.registos.get(cod).getNome() + "\n" + "E-mail: " + FoundThat.registos.get(cod).getEmail() + 
-							"\n" + "Sala: " + FoundThat.registos.get(cod).getSala() + "\n" + "Dia: " + FoundThat.formatoDataRegisto.format(FoundThat.registos.get(cod).getData()) + 
-							"\n" + "Hora: " + FoundThat.registos.get(cod).getHora() + "\n" + "Tipo de objeto: " + FoundThat.registos.get(cod).getObjeto().getNome().substring(0, 1).toUpperCase() + 
-							FoundThat.registos.get(cod).getObjeto().getNome().substring(1).toLowerCase() + "\n" + "Cor: " + FoundThat.registos.get(cod).getCor().substring(0, 1).toUpperCase() +  
-							FoundThat.registos.get(cod).getCor().substring(1).toLowerCase() + "\n" + "Estado: " + FoundThat.registos.get(cod).getEstado().substring(0, 1).toUpperCase() + 
-							FoundThat.registos.get(cod).getEstado().substring(1).toLowerCase() + "\n" + "Descri��o: " + FoundThat.registos.get(cod).getDescricao() ;
+					int idx = -1;
+					for (int i = 0; i < FoundThat.registos.size(); i++) {
+					    if (FoundThat.registos.get(i).getCodigo() == cod) {
+					        idx = i;
+                        }
+                    }
+
+					String info = "Nome: " + FoundThat.registos.get(idx).getNome() + "\n" + "E-mail: " + FoundThat.registos.get(idx).getEmail() +
+							"\n" + "Sala: " + FoundThat.registos.get(idx).getSala() + "\n" + "Dia: " + FoundThat.formatoDataRegisto.format(FoundThat.registos.get(idx).getData()) +
+							"\n" + "Hora: " + FoundThat.registos.get(idx).getHora() + "\n" + "Tipo de objeto: " + FoundThat.registos.get(idx).getObjeto().getNome().substring(0, 1).toUpperCase() +
+							FoundThat.registos.get(idx).getObjeto().getNome().substring(1).toLowerCase() + "\n" + "Cor: " + FoundThat.registos.get(idx).getCor().substring(0, 1).toUpperCase() +
+							FoundThat.registos.get(idx).getCor().substring(1).toLowerCase() + "\n" + "Estado: " + FoundThat.registos.get(idx).getEstado().substring(0, 1).toUpperCase() +
+							FoundThat.registos.get(idx).getEstado().substring(1).toLowerCase() + "\n" + "Descri��o: " + FoundThat.registos.get(idx).getDescricao() ;
 					JOptionPane.showMessageDialog(null, info, "FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 			}

@@ -29,10 +29,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import pt.foundthat.controller.FoundThat;
-import pt.foundthat.controller.ManagerIS;
 import pt.foundthat.controller.ManagerTipoObjeto;
 import pt.foundthat.model.Instituicao;
-import pt.foundthat.model.ModelStrategy;
+import pt.foundthat.model.ModelPrototype;
 import pt.foundthat.model.TipoObjeto;
 
 public class FrmConfigTipoObjeto extends JFrame {
@@ -182,14 +181,16 @@ public class FrmConfigTipoObjeto extends JFrame {
 					JOptionPane.showMessageDialog(null, "Introduza um objeto!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else {
-                    ModelStrategy is = null;
+                    ModelPrototype is = null;
                     String isNome = cmbInstituicao.getSelectedItem().toString().toLowerCase();
-                    for(ModelStrategy i : FoundThat.instituicoes) {
+                    for(ModelPrototype i : FoundThat.instituicoes) {
                         if (i.getNome().equals(isNome)) {
                             is = i;
                         }
                     }
-                    TipoObjeto to = new TipoObjeto(-1, txtObjeto.getText().toLowerCase(), (Instituicao) is);
+                    TipoObjeto to = (TipoObjeto) FoundThat.prototypeTipoObjeto.clone();
+                    to.setNome(txtObjeto.getText().toLowerCase());
+                    to.setCodigoIS((Instituicao) is);
 					if (!FoundThat.managerEntity.adicionarEntity(to)) {
 						JOptionPane.showMessageDialog(null, "O objeto " + txtObjeto.getText().substring(0, 1).toUpperCase()+txtObjeto.getText().substring(1).toLowerCase() + " j� existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 					}
@@ -228,21 +229,25 @@ public class FrmConfigTipoObjeto extends JFrame {
 					else {
 						int selectedOption = JOptionPane.showOptionDialog(null, "Deseja alterar o objeto " + list.getSelectedValue().toString().substring(0, 1).toUpperCase() + list.getSelectedValue().toString().substring(1).toLowerCase() + " pelo objeto " + txtObjeto.getText().substring(0, 1).toUpperCase()+txtObjeto.getText().substring(1).toLowerCase() + "?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 						if (selectedOption == JOptionPane.YES_OPTION) {
-							ModelStrategy isAntiga = null;
+							ModelPrototype isAntiga = null;
 							for (TipoObjeto to : FoundThat.tipoObjetos) {
 								if (list.getSelectedValue().toString().toLowerCase().equals(to.getNome())) {
                                     isAntiga = to.getCodigoIS();
 								}
 							}
-							ModelStrategy isNova = null;
-							for (ModelStrategy i : FoundThat.instituicoes) {
+							ModelPrototype isNova = null;
+							for (ModelPrototype i : FoundThat.instituicoes) {
 							    if (cmbInstituicao.getSelectedItem().toString().toLowerCase().equals(i.getNome())) {
 							        isNova = i;
                                 }
                             }
 
-							ModelStrategy toNovo = new TipoObjeto(-1, txtObjeto.getText().toLowerCase(), (Instituicao) isNova);
-							ModelStrategy toAntigo = new TipoObjeto(-1, list.getSelectedValue().toString().toLowerCase(), (Instituicao) isAntiga);
+							TipoObjeto toNovo = (TipoObjeto) FoundThat.prototypeInstituicao.clone();
+							toNovo.setNome(txtObjeto.getText().toLowerCase());
+							toNovo.setCodigoIS((Instituicao) isNova);
+							TipoObjeto toAntigo = (TipoObjeto) FoundThat.prototypeTipoObjeto.clone();
+							toAntigo.setNome(list.getSelectedValue().toString().toLowerCase());
+							toAntigo.setCodigoIS((Instituicao) isAntiga);
 							if (FoundThat.managerEntity.alterarEntity(toNovo, toAntigo)) {
 								refreshTO();
 								JOptionPane.showMessageDialog(null, "O objeto foi alterado!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
@@ -357,7 +362,7 @@ public class FrmConfigTipoObjeto extends JFrame {
 	public static void refreshIS() {
 		//C�PIA DO ARRAY ORIGINAL DE INSTITUICOES, PARA ORDEN�-LO NA COMBOBOX!
 		ArrayList <Instituicao> instituicoesOrdenado = new ArrayList<>();
-		for(ModelStrategy is : FoundThat.instituicoes) {
+		for(ModelPrototype is : FoundThat.instituicoes) {
 		    instituicoesOrdenado.add((Instituicao) is);
         }
 		Collections.sort(instituicoesOrdenado);

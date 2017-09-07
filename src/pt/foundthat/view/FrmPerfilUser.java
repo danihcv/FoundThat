@@ -28,7 +28,7 @@ import javax.swing.border.EmptyBorder;
 
 import pt.foundthat.controller.FoundThat;
 import pt.foundthat.controller.ManagerTipoUser;
-import pt.foundthat.model.ModelStrategy;
+import pt.foundthat.model.ModelPrototype;
 import pt.foundthat.model.TipoUser;
 
 public class FrmPerfilUser extends JFrame {
@@ -153,7 +153,7 @@ public class FrmPerfilUser extends JFrame {
 		list.setSelectedIndex(0);
 		txtNome.setText(list.getSelectedValue().toString());
 		//ASSOCIAR USER (LIST) AO TIPOUSER (COMBOBOX) ANTERIORMENTE ASSOCIADA
-		for (ModelStrategy t : FoundThat.tipoUsers) {
+		for (ModelPrototype t : FoundThat.tipoUsers) {
 			TipoUser tu = (TipoUser)t;
 			if (tu.getNome().equals(list.getSelectedValue().toString().toLowerCase())) {
 				radioRegisto.setSelected(tu.isRegisto());
@@ -169,7 +169,7 @@ public class FrmPerfilUser extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				txtNome.setText(list.getSelectedValue().toString());
 				//ASSOCIAR USER (LIST) AO TIPOUSER (COMBOBOX) ANTERIORMENTE ASSOCIADA
-				for (ModelStrategy t : FoundThat.tipoUsers) {
+				for (ModelPrototype t : FoundThat.tipoUsers) {
 					TipoUser tu = (TipoUser)t;
 					if (tu.getNome().equals(list.getSelectedValue().toString().toLowerCase())) {
 						radioRegisto.setSelected(tu.isRegisto());
@@ -208,7 +208,15 @@ public class FrmPerfilUser extends JFrame {
 					JOptionPane.showMessageDialog(null, "Introduza um nome!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else {
-					TipoUser tu = new TipoUser(-1, txtNome.getText().toLowerCase(), radioRegisto.isSelected(), radioReclamacao.isSelected(), radioImportacao.isSelected(), radioListagens.isSelected(), radioDoacoes.isSelected(), radioConfiguracoes.isSelected());
+					TipoUser tu = (TipoUser) FoundThat.prototypeTipoUser.clone();
+					tu.setNome(txtNome.getText().toLowerCase());
+					tu.setRegisto(radioRegisto.isSelected());
+					tu.setReclamacao(radioReclamacao.isSelected());
+					tu.setImportacao(radioImportacao.isSelected());
+					tu.setListagens(radioListagens.isSelected());
+					tu.setDoacoes(radioDoacoes.isSelected());
+					tu.setConfiguracoes(radioConfiguracoes.isSelected());
+
 					if (!FoundThat.managerEntity.adicionarEntity(tu)) {
 						JOptionPane.showMessageDialog(null, "O perfil " + txtNome.getText() + " j� existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;				
 					}
@@ -281,8 +289,24 @@ public class FrmPerfilUser extends JFrame {
 					else {
 						int selectedOption = JOptionPane.showOptionDialog(null, "Deseja alterar o perfil " + list.getSelectedValue().toString() + " pelo perfil " + txtNome.getText().substring(0, 1).toUpperCase() + txtNome.getText().substring(1).toLowerCase()+ "?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 						if (selectedOption == JOptionPane.YES_OPTION) {
-							TipoUser tuNovo = new TipoUser(-1, txtNome.getText().toLowerCase(), radioRegisto.isSelected(), radioReclamacao.isSelected(), radioImportacao.isSelected(), radioListagens.isSelected(), radioDoacoes.isSelected(), radioConfiguracoes.isSelected());
-							TipoUser tuAntigo = new TipoUser(-1, list.getSelectedValue().toString().toLowerCase(), radioRegisto.isSelected(), radioReclamacao.isSelected(), radioImportacao.isSelected(), radioListagens.isSelected(), radioDoacoes.isSelected(), radioConfiguracoes.isSelected());
+							TipoUser tuNovo = (TipoUser) FoundThat.prototypeTipoUser.clone();
+							tuNovo.setNome(txtNome.getText().toLowerCase());
+							tuNovo.setRegisto(radioRegisto.isSelected());
+							tuNovo.setReclamacao(radioReclamacao.isSelected());
+							tuNovo.setImportacao(radioImportacao.isSelected());
+							tuNovo.setListagens(radioListagens.isSelected());
+							tuNovo.setDoacoes(radioDoacoes.isSelected());
+							tuNovo.setConfiguracoes(radioConfiguracoes.isSelected());
+
+							TipoUser tuAntigo = (TipoUser) FoundThat.prototypeTipoUser.clone();
+							tuAntigo.setNome(list.getSelectedValue().toString().toLowerCase());
+							tuAntigo.setRegisto(radioRegisto.isSelected());
+							tuAntigo.setReclamacao(radioReclamacao.isSelected());
+							tuAntigo.setImportacao(radioImportacao.isSelected());
+							tuAntigo.setListagens(radioListagens.isSelected());
+							tuAntigo.setDoacoes(radioDoacoes.isSelected());
+							tuAntigo.setConfiguracoes(radioConfiguracoes.isSelected());
+
 							if (FoundThat.managerEntity.alterarEntity(tuNovo, tuAntigo)) {
 								refreshUser();
 								JOptionPane.showMessageDialog(null, "O perfil foi alterado!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
@@ -362,7 +386,7 @@ public class FrmPerfilUser extends JFrame {
 	public static void refreshUser() {
 		//C�PIA DO ARRAY ORIGINAL DE TIPO USERS, PARA ORDEN�-LO NA LIST!
 		ArrayList <TipoUser> tipoUsersOrdenado = new ArrayList<>();
-		for (ModelStrategy t : FoundThat.tipoUsers) {
+		for (ModelPrototype t : FoundThat.tipoUsers) {
 			tipoUsersOrdenado.add((TipoUser) t);
 		}
 		Collections.sort(tipoUsersOrdenado);

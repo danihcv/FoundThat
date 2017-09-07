@@ -1,13 +1,16 @@
 package pt.foundthat.model;
 
 
-import pt.foundthat.controller.FoundThat;
+public class Instituicao extends ModelPrototype implements Comparable <Instituicao> {
 
-public class Instituicao extends ModelStrategy implements Comparable <Instituicao> {
+	public Instituicao() {
+		this.codigo = -1;
+		this.nome = "Nova Instituição";
+	}
 
-	public Instituicao(int codigo, String nome) {
-		this.codigo = codigo;		
-		this.nome = nome;
+	Instituicao(Instituicao is) {
+		this.codigo = is.getCodigo();
+		this.nome = is.getNome();
 	}
 
 	@Override
@@ -20,4 +23,8 @@ public class Instituicao extends ModelStrategy implements Comparable <Instituica
 		return getNome().compareTo(other.getNome()) ;
 	}
 
+	@Override
+	public ModelPrototype clone() {
+		return new Instituicao(this);
+	}
 }

@@ -28,7 +28,7 @@ import javax.swing.border.EmptyBorder;
 
 import pt.foundthat.controller.FoundThat;
 import pt.foundthat.controller.ManagerUser;
-import pt.foundthat.model.ModelStrategy;
+import pt.foundthat.model.ModelPrototype;
 import pt.foundthat.model.TipoUser;
 import pt.foundthat.model.User;
 
@@ -374,7 +374,7 @@ public class FrmGerirUser extends JFrame {
 	public static void refreshTipoUser() {
 		//C�PIA DO ARRAY ORIGINAL DE TIPOUSERS, PARA ORDEN�-LO NA COMBOBOX!
 		ArrayList <TipoUser> tipoUsersOrdenado = new ArrayList<TipoUser>();
-		for (ModelStrategy t : FoundThat.tipoUsers) {
+		for (ModelPrototype t : FoundThat.tipoUsers) {
 		    tipoUsersOrdenado.add((TipoUser) t);
         }
 		Collections.sort(tipoUsersOrdenado);

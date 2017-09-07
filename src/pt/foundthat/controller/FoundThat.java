@@ -15,16 +15,21 @@ import pt.foundthat.view.FrmLogin;
 
 
 public class FoundThat {
+	public static Instituicao prototypeInstituicao = new Instituicao();
+	public static TipoObjeto prototypeTipoObjeto = new TipoObjeto();
+	public static Sala prototypeSala = new Sala();
+	public static TipoUser prototypeTipoUser = new TipoUser();
+
 	public static ManagerActionStrategy managerAction = null;
 	public static ManagerEntityStrategy managerEntity = null;
 	//CRIA��O DE ARRAYS PARA AS CLASSES
 	public static ArrayList<Registo> registos = new ArrayList<>();
 	public static ArrayList<Registo> doacoes = new ArrayList<Registo>();
 	public static ArrayList<Registo> importacoes;
-	public static ArrayList<ModelStrategy> instituicoes = new ArrayList<>();
+	public static ArrayList<ModelPrototype> instituicoes = new ArrayList<>();
 	public static ArrayList<TipoObjeto> tipoObjetos = new ArrayList<TipoObjeto>();
-	public static ArrayList<ModelStrategy> salas = new ArrayList<>();
-	public static ArrayList<ModelStrategy> tipoUsers = new ArrayList<>();
+	public static ArrayList<ModelPrototype> salas = new ArrayList<>();
+	public static ArrayList<ModelPrototype> tipoUsers = new ArrayList<>();
 	public static ArrayList<User> users = new ArrayList<User>();
 	public static ArrayList<Registo> registoDoacoes = new ArrayList<Registo>();
 	//DATA SISTEMA
@@ -70,7 +75,8 @@ public class FoundThat {
 			String[] data = fields1[0].split(" ");
 			String[] dados = fields1[1].split(";");
 
-			Sala s = new Sala(dados[2]);
+			Sala s = (Sala) FoundThat.prototypeSala.clone();
+			s.setNome(dados[2]);
 			for (TipoObjeto to : FoundThat.tipoObjetos) {
 				if (to.getCodigo() == Integer.parseInt(dados[3])) {
 				    Registo reg = new Registo(ManagerRegisto.getLastCode(), dados[0], dados[1], s, FoundThat.formatoDataRegisto.parse(data[0]), data[1], to, dados[4], dados[5], dados[6]);
@@ -124,8 +130,16 @@ public class FoundThat {
 		while (inFile.hasNextLine()) {
 			String line = inFile.nextLine();
 			String [] fields = line.split("#");
-			TipoUser tu = new TipoUser(Integer.parseInt(fields[0]), fields[1], Boolean.parseBoolean(fields[2]), Boolean.parseBoolean(fields[3]), Boolean.parseBoolean(fields[4]), Boolean.parseBoolean(fields[5]), Boolean.parseBoolean(fields[6]), Boolean.parseBoolean(fields[7])); 
-			tipoUsers.add(tu);		
+			TipoUser tu = (TipoUser) FoundThat.prototypeTipoUser.clone();
+			tu.setCodigo(Integer.parseInt(fields[0]));
+			tu.setNome(fields[1]);
+			tu.setRegisto(Boolean.parseBoolean(fields[2]));
+			tu.setReclamacao(Boolean.parseBoolean(fields[3]));
+			tu.setImportacao(Boolean.parseBoolean(fields[4]));
+			tu.setListagens(Boolean.parseBoolean(fields[5]));
+			tu.setDoacoes(Boolean.parseBoolean(fields[6]));
+			tu.setConfiguracoes(Boolean.parseBoolean(fields[7]));
+			tipoUsers.add(tu);
 		}
 
 
@@ -135,7 +149,7 @@ public class FoundThat {
 			String line = inFile.nextLine();
 			String [] fields = line.split("#");
 			int tipo = Integer.parseInt(fields[2]);
-			for (ModelStrategy tu : tipoUsers)
+			for (ModelPrototype tu : tipoUsers)
 			{
 				if (tu.getCodigo() == tipo) {
 					User u = new User(fields[0], fields[1], (TipoUser) tu);
@@ -150,8 +164,10 @@ public class FoundThat {
 		while (inFile.hasNextLine()) {
 			String line = inFile.nextLine();
 			String [] fields = line.split("#");
-			Instituicao is = new Instituicao(Integer.parseInt(fields[0]), fields[1].toLowerCase());
-			instituicoes.add(is);			
+			Instituicao is = (Instituicao) FoundThat.prototypeInstituicao.clone();
+			is.setCodigo(Integer.parseInt(fields[0]));
+			is.setNome(fields[1].toLowerCase());
+			instituicoes.add(is);
 			File instituicaoFile = new File(isFolder + "/" + is.getNome()+".txt");
 			if (!instituicaoFile.isFile()) {
 				instituicaoFile.createNewFile();
@@ -165,9 +181,12 @@ public class FoundThat {
 			String [] fields = line.split("#");
 			//Adicionar codigo da instituicao(fields[2]) ao inteiro codigoIs e posteriormente associar ao TipoObjeto to 
 			int codigoIs = Integer.parseInt(fields[2]);
-			for (ModelStrategy is : instituicoes) {
+			for (ModelPrototype is : instituicoes) {
 				if (is.getCodigo() == codigoIs) {
-					TipoObjeto to = new TipoObjeto(Integer.parseInt(fields[0]), fields[1].toLowerCase(), (Instituicao) is);
+					TipoObjeto to = (TipoObjeto) FoundThat.prototypeTipoObjeto.clone();
+					to.setCodigo(Integer.parseInt(fields[0]));
+					to.setNome(fields[1].toLowerCase());
+					to.setCodigoIS((Instituicao) is);
 					tipoObjetos.add(to);
 				}
 			}
@@ -178,7 +197,8 @@ public class FoundThat {
 		inFile = new Scanner(salasFile);
 		while (inFile.hasNextLine()) {
             String line = inFile.nextLine();
-			Sala s = new Sala(line);
+			Sala s = (Sala) FoundThat.prototypeSala.clone();
+			s.setNome(line);
 			salas.add(s);
 		}
 
@@ -188,7 +208,7 @@ public class FoundThat {
 			String line = inFile.nextLine();
 			String[] fields = line.split("#");
 			Sala tempSala = null;
-			for (ModelStrategy s : salas)
+			for (ModelPrototype s : salas)
 			{
 				if (s.getNome().equals(fields[3])) {
 					tempSala = (Sala) s;
@@ -221,7 +241,7 @@ public class FoundThat {
 					String[] fields = line.split("#");
 					Sala tempSala = null;
                     System.out.println(fields[3]);
-                    for (ModelStrategy s : salas)
+                    for (ModelPrototype s : salas)
 					{
 						if (s.getNome().equals(fields[3])) {
 							tempSala = (Sala) s;
@@ -252,7 +272,7 @@ public class FoundThat {
 
 		//TipoUsers
 		out = new PrintWriter(tipoUsersFile);
-		for (ModelStrategy tu : tipoUsers) {
+		for (ModelPrototype tu : tipoUsers) {
 			out.println(tu.getCodigo() + "#" + tu.getNome() + "#" + ((TipoUser)tu).isRegisto() + "#" + ((TipoUser)tu).isReclamacao() + "#" + ((TipoUser)tu).isImportacao() + "#" + ((TipoUser)tu).isListagens() + "#" + ((TipoUser)tu).isDoacoes() + "#" + ((TipoUser)tu).isConfiguracoes());
 		}
 		out.close();
@@ -269,7 +289,7 @@ public class FoundThat {
 		@SuppressWarnings("unused")
 		PrintWriter out2;
 
-		for (ModelStrategy is : instituicoes) {
+		for (ModelPrototype is : instituicoes) {
 			out.println(is.getCodigo() + "#" + is.getNome().toLowerCase());
 		}
 		out.close();
@@ -285,7 +305,7 @@ public class FoundThat {
 
 		//Salas
 		out = new PrintWriter(salasFile);
-		for (ModelStrategy s : salas) {
+		for (ModelPrototype s : salas) {
 			out.println(s.getNome().toUpperCase());
 		}
 		out.close();
@@ -363,7 +383,7 @@ public class FoundThat {
 
 	public static boolean checkPerfil(String instituicao) {
 		res = false;
-		for (ModelStrategy is : instituicoes) {
+		for (ModelPrototype is : instituicoes) {
 			if (instituicao.equals(is.getNome())) {
 				res = true;
 			}

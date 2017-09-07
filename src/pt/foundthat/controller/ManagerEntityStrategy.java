@@ -1,20 +1,16 @@
 package pt.foundthat.controller;
 
-import pt.foundthat.model.Instituicao;
-import pt.foundthat.model.ModelStrategy;
-import pt.foundthat.model.TipoObjeto;
-import sun.awt.ModalExclude;
-import sun.plugin2.main.server.ModalitySupport;
+import pt.foundthat.model.ModelPrototype;
 
 import java.util.ArrayList;
 
 public abstract class ManagerEntityStrategy {
-    ArrayList<ModelStrategy> entityList = new ArrayList<>();
+    ArrayList<ModelPrototype> entityList = new ArrayList<>();
 
     public boolean isEntity(String nome) {
         boolean res = false;
 
-        for (ModelStrategy ent : entityList) {
+        for (ModelPrototype ent : entityList) {
             if (ent.getNome().equals(nome)) {
                 res = true;
             }
@@ -22,14 +18,14 @@ public abstract class ManagerEntityStrategy {
         return res;
     }
 
-    public abstract boolean adicionarEntity(ModelStrategy entity);
+    public abstract boolean adicionarEntity(ModelPrototype entity);
 
-    public abstract boolean alterarEntity(ModelStrategy novaEntity, ModelStrategy antigaEntity);
+    public abstract boolean alterarEntity(ModelPrototype novaEntity, ModelPrototype antigaEntity);
 
-    protected boolean alterarEntity(ModelStrategy novaEntity, ModelStrategy antigaEntity, ArrayList<ModelStrategy> list) {
+    protected boolean alterarEntity(ModelPrototype novaEntity, ModelPrototype antigaEntity, ArrayList<ModelPrototype> list) {
         boolean res = false;
         if (!isEntity(novaEntity.getNome())) {
-            for (ModelStrategy ent : list) {
+            for (ModelPrototype ent : list) {
                 if (ent.getNome().equals(antigaEntity.getNome())) {
                     ent.setNome(novaEntity.getNome());
                     res = true;

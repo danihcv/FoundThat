@@ -130,6 +130,4 @@ public class Registo implements Comparable<Registo>{
 	public int compareTo(Registo o) {
 		return getObjeto().getNome().compareTo(o.getObjeto().getNome());
 	}
-
-
 }

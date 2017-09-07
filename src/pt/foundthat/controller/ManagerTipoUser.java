@@ -1,14 +1,13 @@
 package pt.foundthat.controller;
 
-import pt.foundthat.model.ModelStrategy;
-import pt.foundthat.model.TipoObjeto;
+import pt.foundthat.model.ModelPrototype;
 import pt.foundthat.model.TipoUser;
 
 public class ManagerTipoUser extends ManagerEntityStrategy {
 
 	public boolean isPerfilUser(String nome) {
 		boolean res = false;
-		for (ModelStrategy tu : FoundThat.tipoUsers) {
+		for (ModelPrototype tu : FoundThat.tipoUsers) {
 			if (tu.getNome().equals(nome)) {
 				res = true;
 			}
@@ -17,11 +16,11 @@ public class ManagerTipoUser extends ManagerEntityStrategy {
 	}
 
 	//public boolean isEntity(String nome, Boolean registo, Boolean reclamacao, Boolean importacao, Boolean listagens, Boolean doacoes, Boolean configuracoes) {
-	public boolean isEntity(ModelStrategy entity) {
+	public boolean isEntity(ModelPrototype entity) {
         TipoUser ent = (TipoUser) entity;
 		boolean res = false;
 
-		for (ModelStrategy t : FoundThat.tipoUsers) {
+		for (ModelPrototype t : FoundThat.tipoUsers) {
 		    TipoUser tu = ((TipoUser)t);
 			if (tu.getNome().equals(entity.getNome())) {
 				if (tu.isRegisto() == ent.isRegisto() &&  tu.isReclamacao() == ent.isReclamacao() && tu.isImportacao() == ent.isImportacao() && tu.isListagens() == ent.isListagens() && tu.isDoacoes() == ent.isDoacoes() && tu.isConfiguracoes() == ent.isConfiguracoes()) {
@@ -33,7 +32,7 @@ public class ManagerTipoUser extends ManagerEntityStrategy {
 	}
 
 	//public boolean adicionarEntity(String nome, Boolean registo, Boolean reclamacao, Boolean importacao, Boolean listagens, Boolean doacoes, Boolean configuracoes) {
-	public boolean adicionarEntity(ModelStrategy entity) {
+	public boolean adicionarEntity(ModelPrototype entity) {
 		boolean res = false;
 		if (!isPerfilUser(entity.getNome())) {
 			entity.setCodigo(getLastCode());
@@ -58,7 +57,7 @@ public class ManagerTipoUser extends ManagerEntityStrategy {
 		return res;
 	}
 
-	public boolean alterarEntity(ModelStrategy tuNovo, ModelStrategy tuAntigo) {
+	public boolean alterarEntity(ModelPrototype tuNovo, ModelPrototype tuAntigo) {
 		boolean res = false;
 
 		if (!isPerfilUser(tuNovo.getNome()) || (isPerfilUser(tuNovo.getNome()) && !isEntity(tuAntigo))) {

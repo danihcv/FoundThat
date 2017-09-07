@@ -1,8 +1,8 @@
 package pt.foundthat.model;
 
-public abstract class ModelStrategy {
-    String nome;
+public abstract class ModelPrototype {
     int codigo;
+    String nome;
 
     public int getCodigo() {
         return codigo;
@@ -19,4 +19,6 @@ public abstract class ModelStrategy {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    public abstract ModelPrototype clone();
 }

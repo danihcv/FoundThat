@@ -1,13 +1,22 @@
 package pt.foundthat.model;
 
-public class Sala extends ModelStrategy implements Comparable<Sala> {
+public class Sala extends ModelPrototype implements Comparable<Sala> {
 
-	public Sala(String nome) {
-		this.nome = nome;
+	public Sala() {
+		this.nome = "Nova Sala";
+	}
+
+	public Sala(Sala sala) {
+		this.nome = sala.nome;
 	}
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	@Override
+	public ModelPrototype clone() {
+		return new Sala(this);
 	}
 
 	@Override

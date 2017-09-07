@@ -28,7 +28,7 @@ import javax.swing.border.EmptyBorder;
 import pt.foundthat.controller.FoundThat;
 import pt.foundthat.controller.ManagerIS;
 import pt.foundthat.model.Instituicao;
-import pt.foundthat.model.ModelStrategy;
+import pt.foundthat.model.ModelPrototype;
 
 public class FrmConfigIS extends JFrame {
 
@@ -143,7 +143,8 @@ public class FrmConfigIS extends JFrame {
 					JOptionPane.showMessageDialog(null, "Introduza uma institui��o!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else {
-					ModelStrategy is = new Instituicao(-1, txtIS.getText().toLowerCase());
+					ModelPrototype is = FoundThat.prototypeInstituicao.clone();
+					is.setNome(txtIS.getText().toLowerCase());
 					if (!FoundThat.managerEntity.adicionarEntity(is)) {
 						JOptionPane.showMessageDialog(null, "A institui��o " + txtIS.getText().substring(0, 1).toUpperCase() + txtIS.getText().substring(1).toLowerCase() + " j� existe!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 					}
@@ -191,8 +192,10 @@ public class FrmConfigIS extends JFrame {
 					else {
 						int selectedOption = JOptionPane.showOptionDialog(null, "Deseja alterar a institui��o " + list.getSelectedValue().toString() + " pela institui��o " + txtIS.getText() + "?", "AVISO! - FoundThat", 0, JOptionPane.INFORMATION_MESSAGE, null, opcoes, null); 
 						if (selectedOption == JOptionPane.YES_OPTION) {
-						    ModelStrategy isNova = new Instituicao(-1, txtIS.getText().toLowerCase());
-						    ModelStrategy isAntiga = new Instituicao(-1, list.getSelectedValue().toString().toLowerCase());
+						    ModelPrototype isNova = FoundThat.prototypeInstituicao.clone();
+						    isNova.setNome(txtIS.getText().toLowerCase());
+						    ModelPrototype isAntiga = FoundThat.prototypeInstituicao.clone();
+						    isAntiga.setNome(list.getSelectedValue().toString().toLowerCase());
 							if (((ManagerIS)FoundThat.managerEntity).alterarEntity(isNova, isAntiga)) {
 								JOptionPane.showMessageDialog(null, "A institui��o foi alterada!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 								refresh();
@@ -305,7 +308,7 @@ public class FrmConfigIS extends JFrame {
 	public static void refresh() {
 		//C�PIA DO ARRAY ORIGINAL DE INSTITUICOES, PARA ORDEN�-LO NA LIST!
 		ArrayList <Instituicao> instituicoesOrdenado = new ArrayList<>();
-		for(ModelStrategy is : FoundThat.instituicoes) {
+		for(ModelPrototype is : FoundThat.instituicoes) {
 		    instituicoesOrdenado.add((Instituicao) is);
         }
 		Collections.sort(instituicoesOrdenado);

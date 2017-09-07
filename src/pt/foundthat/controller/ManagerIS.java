@@ -1,10 +1,8 @@
 package pt.foundthat.controller;
 
 import pt.foundthat.model.Instituicao;
-import pt.foundthat.model.ModelStrategy;
+import pt.foundthat.model.ModelPrototype;
 import pt.foundthat.model.TipoObjeto;
-
-import static pt.foundthat.controller.FoundThat.res;
 
 public class ManagerIS extends ManagerEntityStrategy {
 
@@ -26,17 +24,19 @@ public class ManagerIS extends ManagerEntityStrategy {
 	    return res;
 	}
 
-	public boolean adicionarEntity(ModelStrategy entity) {
+	public boolean adicionarEntity(ModelPrototype entity) {
 		boolean res = false;
 		if (!isEntity(entity.getNome())) {
-            Instituicao is = new Instituicao(getLastCode(), entity.getNome());
+            Instituicao is = (Instituicao) FoundThat.prototypeInstituicao.clone();
+            is.setCodigo(getLastCode());
+            is.setNome(entity.getNome());
 			FoundThat.instituicoes.add(is);
 			res = true;
 		} 
 		return res;		
 	}
 
-    public boolean alterarEntity(ModelStrategy novaIS, ModelStrategy isAntiga) {
+    public boolean alterarEntity(ModelPrototype novaIS, ModelPrototype isAntiga) {
         return super.alterarEntity(novaIS, isAntiga, FoundThat.instituicoes);
     }
 
@@ -45,7 +45,7 @@ public class ManagerIS extends ManagerEntityStrategy {
 
 		if (isEntity(nome)) {
 			for (int i = 0; i < FoundThat.instituicoes.size(); i++) {
-				ModelStrategy is = FoundThat.instituicoes.get(i);
+				ModelPrototype is = FoundThat.instituicoes.get(i);
 				if (is.getNome().equals(nome)) {
 					FoundThat.instituicoes.remove(i);	
 			        res = true;

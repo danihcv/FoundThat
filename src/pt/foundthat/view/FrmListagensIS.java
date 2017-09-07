@@ -33,9 +33,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import pt.foundthat.controller.FoundThat;
-import pt.foundthat.model.ModelStrategy;
+import pt.foundthat.model.ModelPrototype;
 import pt.foundthat.model.Registo;
-import pt.foundthat.model.Sala;
 import pt.foundthat.model.TipoObjeto;
 
 public class FrmListagensIS extends JFrame {
@@ -133,7 +132,7 @@ public class FrmListagensIS extends JFrame {
 		cmbSala.setForeground(new Color(25, 25, 112));
 		cmbSala.setBackground(new Color(220, 220, 220));
 
-		for (ModelStrategy s : FoundThat.salas) {
+		for (ModelPrototype s : FoundThat.salas) {
 			cmbSala.addItem(s);
 		}
 

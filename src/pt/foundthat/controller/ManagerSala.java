@@ -1,6 +1,6 @@
 package pt.foundthat.controller;
 
-import pt.foundthat.model.ModelStrategy;
+import pt.foundthat.model.ModelPrototype;
 import pt.foundthat.model.Sala;
 
 public class ManagerSala extends ManagerEntityStrategy {
@@ -12,17 +12,18 @@ public class ManagerSala extends ManagerEntityStrategy {
 		return res;
 	}
 
-	public boolean adicionarEntity(ModelStrategy entity) {
+	public boolean adicionarEntity(ModelPrototype entity) {
 		boolean res = false;
 		if (!isEntity(entity.getNome())) {
-			Sala s = new Sala(entity.getNome());
+			Sala s = (Sala) FoundThat.prototypeSala.clone();
+			s.setNome(entity.getNome());
 			FoundThat.salas.add(s);
 			res = true;
 		} 
 		return res;		
 	}
 
-	public boolean alterarEntity(ModelStrategy salaNova, ModelStrategy salaAntiga) {
+	public boolean alterarEntity(ModelPrototype salaNova, ModelPrototype salaAntiga) {
         return super.alterarEntity(salaNova, salaAntiga, FoundThat.salas);
 	}
 
@@ -31,7 +32,7 @@ public class ManagerSala extends ManagerEntityStrategy {
 
 		if (isEntity(sala)) {
 			for (int i = 0; i < FoundThat.salas.size(); i++) {
-				ModelStrategy s = FoundThat.salas.get(i);
+				ModelPrototype s = FoundThat.salas.get(i);
 				if (s.getNome().equals(sala)) {
 					FoundThat.salas.remove(i);	
 			        res = true;
