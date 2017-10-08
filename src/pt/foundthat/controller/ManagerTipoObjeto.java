@@ -12,11 +12,11 @@ public class ManagerTipoObjeto extends ManagerEntityStrategy {
 		this.entityList.clear();
 		return res;
 	}
-
+/*
 	public boolean alterarEntity(String novaEntity, String antigaEntity) {
 		return false;
 	}
-
+*/
 	public boolean adicionarEntity(ModelPrototype entity) {
 		boolean res = false;
 		String isNome = ((TipoObjeto)entity).getCodigoIS().getNome();

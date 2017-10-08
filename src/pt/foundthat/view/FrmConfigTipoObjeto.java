@@ -242,7 +242,7 @@ public class FrmConfigTipoObjeto extends JFrame {
                                 }
                             }
 
-							TipoObjeto toNovo = (TipoObjeto) FoundThat.prototypeInstituicao.clone();
+							TipoObjeto toNovo = (TipoObjeto) FoundThat.prototypeTipoObjeto.clone();
 							toNovo.setNome(txtObjeto.getText().toLowerCase());
 							toNovo.setCodigoIS((Instituicao) isNova);
 							TipoObjeto toAntigo = (TipoObjeto) FoundThat.prototypeTipoObjeto.clone();

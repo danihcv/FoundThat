@@ -240,7 +240,7 @@ public class FoundThat {
 					String line = inFile.nextLine();
 					String[] fields = line.split("#");
 					Sala tempSala = null;
-                    System.out.println(fields[3]);
+                    //System.out.println(fields[3]);
                     for (ModelPrototype s : salas)
 					{
 						if (s.getNome().equals(fields[3])) {

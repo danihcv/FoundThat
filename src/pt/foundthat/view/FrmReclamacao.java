@@ -154,7 +154,7 @@ class FrmReclamacao extends JFrame {
 		@SuppressWarnings("unused")
 		int cont = 0;
 		String[][] regs = new String[FoundThat.registos.size()][5];
-		System.out.println(FoundThat.registos.size());
+		//System.out.println(FoundThat.registos.size());
 		for (int i = 0; i < FoundThat.registos.size(); i++) {
 			regs[i][0] = Integer.toString(FoundThat.registos.get(i).getCodigo());
 			regs[i][1] = FoundThat.registos.get(i).getObjeto().getNome().substring(0, 1).toUpperCase() + FoundThat.registos.get(i).getObjeto().getNome().substring(1).toLowerCase();
@@ -286,19 +286,21 @@ class FrmReclamacao extends JFrame {
 					JOptionPane.showMessageDialog(null, "Selecione um objeto!", "AVISO! - FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 				else {
-                    int cod = (Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString()));
-					int idx = -1;
+                    int cod = (Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString()) - 1);
+					/*
+                    int idx = -1;
 					for (int i = 0; i < FoundThat.registos.size() && idx == -1; i++) {
                         if (FoundThat.registos.get(i).getCodigo() == cod) {
 					        idx = i;
                         }
                     }
-                    String info = "Nome: " + FoundThat.registos.get(idx).getNome() + "\n" + "E-mail: " + FoundThat.registos.get(idx).getEmail() +
-							"\n" + "Sala: " + FoundThat.registos.get(idx).getSala() + "\n" + "Dia: " + FoundThat.formatoDataRegisto.format(FoundThat.registos.get(idx).getData()) +
-							"\n" + "Hora: " + FoundThat.registos.get(idx).getHora() + "\n" + "Tipo de objeto: " + FoundThat.registos.get(idx).getObjeto().getNome().substring(0, 1).toUpperCase() +
-							FoundThat.registos.get(idx).getObjeto().getNome().substring(1).toLowerCase() + "\n" + "Cor: " + FoundThat.registos.get(idx).getCor().substring(0, 1).toUpperCase() +
-							FoundThat.registos.get(idx).getCor().substring(1).toLowerCase() + "\n" + "Estado: " + FoundThat.registos.get(idx).getEstado().substring(0, 1).toUpperCase() +
-							FoundThat.registos.get(idx).getEstado().substring(1).toLowerCase() + "\n" + "Descri��o: " + FoundThat.registos.get(idx).getDescricao() ;
+                    */
+                    String info = "Nome: " + FoundThat.registos.get(cod).getNome() + "\n" + "E-mail: " + FoundThat.registos.get(cod).getEmail() +
+							"\n" + "Sala: " + FoundThat.registos.get(cod).getSala() + "\n" + "Dia: " + FoundThat.formatoDataRegisto.format(FoundThat.registos.get(cod).getData()) +
+							"\n" + "Hora: " + FoundThat.registos.get(cod).getHora() + "\n" + "Tipo de objeto: " + FoundThat.registos.get(cod).getObjeto().getNome().substring(0, 1).toUpperCase() +
+							FoundThat.registos.get(cod).getObjeto().getNome().substring(1).toLowerCase() + "\n" + "Cor: " + FoundThat.registos.get(cod).getCor().substring(0, 1).toUpperCase() +
+							FoundThat.registos.get(cod).getCor().substring(1).toLowerCase() + "\n" + "Estado: " + FoundThat.registos.get(cod).getEstado().substring(0, 1).toUpperCase() +
+							FoundThat.registos.get(cod).getEstado().substring(1).toLowerCase() + "\n" + "Descri��o: " + FoundThat.registos.get(cod).getDescricao() ;
 					JOptionPane.showMessageDialog(null, info, "FoundThat", JOptionPane.INFORMATION_MESSAGE);;
 				}
 			}
